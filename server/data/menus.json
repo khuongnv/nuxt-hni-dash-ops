@@ -49,7 +49,7 @@
   },
   {
     "id": 5,
-    "name": "Quản lý Menu",
+    "name": "Quản lý Menu hệ thống",
     "href": "/admin/menu-management",
     "icon": "Menu",
     "order": 5,
@@ -70,5 +70,29 @@
     "level": 1,
     "createdAt": "2024-01-15T08:00:00Z",
     "updatedAt": "2024-01-15T08:00:00Z"
+  },
+  {
+    "id": 7,
+    "name": "Test Menu",
+    "href": "/test",
+    "icon": "Settings",
+    "order": 7,
+    "isActive": true,
+    "parentId": null,
+    "level": 1,
+    "createdAt": "2025-09-12T15:52:34.480Z",
+    "updatedAt": "2025-09-12T15:52:34.480Z"
+  },
+  {
+    "id": 8,
+    "name": "Test Menu 2",
+    "href": "/test2",
+    "icon": "Settings",
+    "order": 8,
+    "isActive": true,
+    "parentId": null,
+    "level": 1,
+    "createdAt": "2025-09-12T15:54:00.545Z",
+    "updatedAt": "2025-09-12T15:54:00.545Z"
   }
 ]

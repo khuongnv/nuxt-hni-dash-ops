@@ -220,14 +220,15 @@ const navigationItems = ref<any[]>([])
 // Load menu data from JSON file
 const loadMenuData = async () => {
   try {
-    const response = await $fetch('/menus.json')
+    const response = await $fetch('/api/menus')
     // Filter only active menus and sort by order
-    const activeMenus = response
+    const activeMenus = response.success ? response.data : response
+    const filteredMenus = activeMenus
       .filter((menu: any) => menu.isActive)
       .sort((a: any, b: any) => a.order - b.order)
     
     // Convert to sidebar format
-    navigationItems.value = activeMenus.map((menu: any) => ({
+    navigationItems.value = filteredMenus.map((menu: any) => ({
       name: menu.name,
       href: menu.href,
       icon: getIconComponent(menu.icon),
