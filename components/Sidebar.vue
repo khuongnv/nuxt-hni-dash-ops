@@ -214,80 +214,40 @@ const route = useRoute()
 // Submenu state - sẵn sàng cho việc mở rộng
 const openSubmenus = ref<string[]>([])
 
-// Navigation items - load từ file JSON
-const navigationItems = ref<any[]>([])
-
-// Load menu data from JSON file
-const loadMenuData = async () => {
-  try {
-    const response = await $fetch('/api/menus')
-    // Filter only active menus and sort by order
-    const activeMenus = response.success ? response.data : response
-    const filteredMenus = activeMenus
-      .filter((menu: any) => menu.isActive)
-      .sort((a: any, b: any) => a.order - b.order)
-    
-    // Convert to sidebar format
-    navigationItems.value = filteredMenus.map((menu: any) => ({
-      name: menu.name,
-      href: menu.href,
-      icon: getIconComponent(menu.icon),
-      children: menu.children || []
-    }))
-  } catch (error) {
-    console.error('Error loading menu data:', error)
-    // Fallback to static data
-    navigationItems.value = [
-      {
-        name: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutDashboard
-      },
-      {
-        name: 'Quản lý người dùng',
-        href: '/users',
-        icon: Users
-      },
-      {
-        name: 'Báo cáo & Thống kê',
-        href: '/reports',
-        icon: BarChart3
-      },
-      {
-        name: 'Cài đặt hệ thống',
-        href: '/settings',
-        icon: Settings
-      },
-      {
-        name: 'Quản lý Menu',
-        href: '/menu-management',
-        icon: Menu
-      },
-      {
-        name: 'Giới thiệu',
-        href: '/about',
-        icon: Info
-      }
-    ]
+// Navigation items - sử dụng dữ liệu tĩnh
+const navigationItems = ref([
+  {
+    name: 'Dashboard',
+    href: '/main/dashboard',
+    icon: LayoutDashboard
+  },
+  {
+    name: 'Quản lý người dùng',
+    href: '/admin/users',
+    icon: Users
+  },
+  {
+    name: 'Báo cáo & Thống kê',
+    href: '/system/reports',
+    icon: BarChart3
+  },
+  {
+    name: 'Cài đặt hệ thống',
+    href: '/system/settings',
+    icon: Settings
+  },
+  {
+    name: 'Quản lý Menu hệ thống',
+    href: '/admin/menu-management',
+    icon: Menu
+  },
+  {
+    name: 'Giới thiệu',
+    href: '/main/about',
+    icon: Info
   }
-}
+])
 
-// Get icon component by name
-const getIconComponent = (iconName: string) => {
-  const icons: any = {
-    LayoutDashboard,
-    Users,
-    BarChart3,
-    Settings,
-    Menu,
-    Info,
-    Plus: Plus,
-    Edit: Edit,
-    Trash2: Trash2,
-    Search: Search
-  }
-  return icons[iconName] || Menu
-}
 
 // Toggle submenu - sẵn sàng cho việc mở rộng
 const toggleSubmenu = (menuName: string) => {
@@ -310,10 +270,6 @@ const isSubmenuActive = (children: any[]) => {
   return children.some(child => isActive(child.href))
 }
 
-// Load menu data on component mount
-onMounted(() => {
-  loadMenuData()
-})
 </script>
 
 <style scoped>
