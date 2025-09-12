@@ -1,7 +1,7 @@
 <template>
   <nav class="flex items-center space-x-2 text-sm text-muted-foreground">
     <NuxtLink 
-      to="/dashboard" 
+      to="/main/dashboard" 
       class="hover:text-foreground transition-colors"
     >
       Trang chủ
@@ -53,10 +53,15 @@ const breadcrumbs = computed(() => {
   
   // Vietnamese page names mapping
   const pageNames: Record<string, string> = {
+    'main': 'Trang chính',
+    'admin': 'Quản trị',
+    'system': 'Hệ thống',
     'dashboard': 'Dashboard',
     'users': 'Người dùng',
     'reports': 'Báo cáo',
-    'settings': 'Cài đặt'
+    'settings': 'Cài đặt',
+    'menu-management': 'Quản lý Menu',
+    'about': 'Giới thiệu'
   }
   
   let currentPath = ''

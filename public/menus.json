@@ -2,7 +2,7 @@
   {
     "id": 1,
     "name": "Dashboard",
-    "href": "/dashboard",
+    "href": "/main/dashboard",
     "icon": "LayoutDashboard",
     "order": 1,
     "isActive": true,
@@ -14,7 +14,7 @@
   {
     "id": 2,
     "name": "Quản lý người dùng",
-    "href": "/users",
+    "href": "/admin/users",
     "icon": "Users",
     "order": 2,
     "isActive": true,
@@ -26,7 +26,7 @@
   {
     "id": 3,
     "name": "Báo cáo & Thống kê",
-    "href": "/reports",
+    "href": "/system/reports",
     "icon": "BarChart3",
     "order": 3,
     "isActive": true,
@@ -38,7 +38,7 @@
   {
     "id": 4,
     "name": "Cài đặt hệ thống",
-    "href": "/settings",
+    "href": "/system/settings",
     "icon": "Settings",
     "order": 4,
     "isActive": true,
@@ -50,7 +50,7 @@
   {
     "id": 5,
     "name": "Quản lý Menu",
-    "href": "/menu-management",
+    "href": "/admin/menu-management",
     "icon": "Menu",
     "order": 5,
     "isActive": true,
@@ -62,7 +62,7 @@
   {
     "id": 6,
     "name": "Giới thiệu",
-    "href": "/about",
+    "href": "/main/about",
     "icon": "Info",
     "order": 6,
     "isActive": true,

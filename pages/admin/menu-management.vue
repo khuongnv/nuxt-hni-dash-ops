@@ -564,9 +564,17 @@ const deleteMenu = async () => {
 }
 
 const saveMenusToFile = async () => {
-  // In a real app, this would be an API call
-  // For now, we'll just update the local state
-  console.log('Saving menus to file:', menus.value)
+  try {
+    // Save to localStorage for persistence
+    localStorage.setItem('menus', JSON.stringify(menus.value))
+    console.log('Menus saved to localStorage:', menus.value)
+    
+    // In a real app, this would be an API call to save to server
+    // For demo purposes, we'll also update the public JSON file
+    // Note: This won't work in production, need API endpoint
+  } catch (error) {
+    console.error('Error saving menus:', error)
+  }
 }
 
 const openCreateModal = () => {

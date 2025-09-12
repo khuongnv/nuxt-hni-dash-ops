@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NuxtLink to="/dashboard">
+    <NuxtLink to="/main/dashboard">
       <Button class="w-full h-20 text-lg">
         <LayoutDashboard class="mr-2 h-6 w-6" />
         Chuyển đến Dashboard
@@ -16,5 +16,5 @@ import { LayoutDashboard } from 'lucide-vue-next'
 import Button from '~/components/ui/Button.vue'
 
 // Redirect to dashboard
-await navigateTo('/dashboard')
+await navigateTo('/main/dashboard')
 </script>
