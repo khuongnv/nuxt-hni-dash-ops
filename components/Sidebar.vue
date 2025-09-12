@@ -195,7 +195,8 @@ import {
   BarChart3,
   Settings,
   ChevronDown,
-  Info
+  Info,
+  Menu
 } from 'lucide-vue-next'
 
 interface Props {
@@ -230,6 +231,11 @@ const navigationItems = [
     name: 'Cài đặt hệ thống',
     href: '/settings',
     icon: Settings
+  },
+  {
+    name: 'Quản lý Menu',
+    href: '/menu-management',
+    icon: Menu
   },
   {
     name: 'Giới thiệu',
