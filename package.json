@@ -14,21 +14,15 @@
     "@nuxtjs/tailwindcss": "^6.8.4",
     "@tailwindcss/typography": "^0.5.10",
     "nuxt": "^3.8.0",
-    "shadcn-nuxt": "^0.7.0",
     "tailwindcss": "^3.3.6"
   },
   "dependencies": {
-    "@radix-vue/core": "^1.0.0",
-    "@radix-vue/primitive": "^1.0.0",
-    "@radix-vue/separator": "^1.0.0",
-    "@radix-vue/slot": "^1.0.0",
-    "@radix-vue/toast": "^1.0.0",
     "@vueuse/core": "^10.5.0",
     "@vueuse/nuxt": "^10.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "lucide-vue-next": "^0.294.0",
-    "radix-vue": "^1.0.0",
+    "radix-vue": "^1.9.17",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7"
   }

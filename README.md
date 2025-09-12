@@ -25,7 +25,7 @@ Dashboard nội bộ được xây dựng với Nuxt 3 và shadcn-vue cho việc
 
 1. Clone repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/your-username/nuxtjs-hni-dash-ops.git
 cd nuxtjs-hni-dash-ops
 ```
 
@@ -132,19 +132,11 @@ npm run build
 
 2. Deploy thư mục `.output` lên hosting service
 
-## 🤝 Đóng góp
-
-1. Fork repository
-2. Tạo feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Mở Pull Request
-
 ## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+© 2024 KhuongNV. All rights reserved.
 
 ## 📞 Liên hệ
 
-- Email: admin@hni.com
-- Project Link: [https://github.com/your-username/nuxtjs-hni-dash-ops](https://github.com/your-username/nuxtjs-hni-dash-ops)
+- Email: khuongnv@live.com
+

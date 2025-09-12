@@ -1,18 +1,16 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
-      <div>
-        <h2 class="text-2xl font-bold tracking-tight">Báo cáo & Thống kê</h2>
-        <p class="text-muted-foreground">
-          Xem và tạo các báo cáo chi tiết về hệ thống
-        </p>
-      </div>
-      <Button>
-        <FileText class="mr-2 h-4 w-4" />
-        Tạo báo cáo mới
-      </Button>
-    </div>
+    <PageHeader 
+      title="Báo cáo & Thống kê"
+    >
+      <template #actions>
+        <Button>
+          <FileText class="mr-2 h-4 w-4" />
+          Tạo báo cáo mới
+        </Button>
+      </template>
+    </PageHeader>
 
     <!-- Report Filters -->
     <Card>
@@ -102,7 +100,7 @@
                   </Badge>
                 </TableCell>
                 <TableCell>{{ report.createdBy }}</TableCell>
-                <TableCell>{{ formatDate(report.createdAt) }}</TableCell>
+                <TableCell>{{ new Date(report.createdAt).toLocaleDateString('vi-VN') }}</TableCell>
                 <TableCell>
                   <Badge :variant="getStatusVariant(report.status)">
                     {{ getStatusLabel(report.status) }}
@@ -177,6 +175,28 @@ import {
   Activity,
   Shield
 } from 'lucide-vue-next'
+
+// Import UI components explicitly
+import Button from '~/components/ui/Button.vue'
+import Card from '~/components/ui/Card.vue'
+import CardHeader from '~/components/ui/CardHeader.vue'
+import CardTitle from '~/components/ui/CardTitle.vue'
+import CardContent from '~/components/ui/CardContent.vue'
+import CardDescription from '~/components/ui/CardDescription.vue'
+import Input from '~/components/ui/Input.vue'
+import Label from '~/components/ui/Label.vue'
+import Select from '~/components/ui/Select.vue'
+import SelectTrigger from '~/components/ui/SelectTrigger.vue'
+import SelectValue from '~/components/ui/SelectValue.vue'
+import SelectContent from '~/components/ui/SelectContent.vue'
+import SelectItem from '~/components/ui/SelectItem.vue'
+import Table from '~/components/ui/Table.vue'
+import TableHeader from '~/components/ui/TableHeader.vue'
+import TableBody from '~/components/ui/TableBody.vue'
+import TableRow from '~/components/ui/TableRow.vue'
+import TableHead from '~/components/ui/TableHead.vue'
+import TableCell from '~/components/ui/TableCell.vue'
+import Badge from '~/components/ui/Badge.vue'
 
 // Set page title
 useHead({

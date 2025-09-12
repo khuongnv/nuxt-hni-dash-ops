@@ -1,18 +1,16 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
-      <div>
-        <h2 class="text-2xl font-bold tracking-tight">Quản lý người dùng</h2>
-        <p class="text-muted-foreground">
-          Quản lý tài khoản người dùng trong hệ thống
-        </p>
-      </div>
-      <Button>
-        <UserPlus class="mr-2 h-4 w-4" />
-        Thêm người dùng
-      </Button>
-    </div>
+    <PageHeader 
+      title="Quản lý người dùng"
+    >
+      <template #actions>
+        <Button>
+          <UserPlus class="mr-2 h-4 w-4" />
+          Thêm người dùng
+        </Button>
+      </template>
+    </PageHeader>
 
     <!-- Filters -->
     <Card>
@@ -96,7 +94,7 @@
                     {{ getStatusLabel(user.status) }}
                   </Badge>
                 </TableCell>
-                <TableCell>{{ formatDate(user.createdAt) }}</TableCell>
+                <TableCell>{{ new Date(user.createdAt).toLocaleDateString('vi-VN') }}</TableCell>
                 <TableCell class="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger as-child>
@@ -144,6 +142,35 @@ import {
   Trash2 
 } from 'lucide-vue-next'
 
+// Import UI components explicitly
+import Button from '~/components/ui/Button.vue'
+import Card from '~/components/ui/Card.vue'
+import CardHeader from '~/components/ui/CardHeader.vue'
+import CardTitle from '~/components/ui/CardTitle.vue'
+import CardContent from '~/components/ui/CardContent.vue'
+import CardDescription from '~/components/ui/CardDescription.vue'
+import Input from '~/components/ui/Input.vue'
+import Select from '~/components/ui/Select.vue'
+import SelectTrigger from '~/components/ui/SelectTrigger.vue'
+import SelectValue from '~/components/ui/SelectValue.vue'
+import SelectContent from '~/components/ui/SelectContent.vue'
+import SelectItem from '~/components/ui/SelectItem.vue'
+import Table from '~/components/ui/Table.vue'
+import TableHeader from '~/components/ui/TableHeader.vue'
+import TableBody from '~/components/ui/TableBody.vue'
+import TableRow from '~/components/ui/TableRow.vue'
+import TableHead from '~/components/ui/TableHead.vue'
+import TableCell from '~/components/ui/TableCell.vue'
+import Avatar from '~/components/ui/Avatar.vue'
+import AvatarImage from '~/components/ui/AvatarImage.vue'
+import AvatarFallback from '~/components/ui/AvatarFallback.vue'
+import Badge from '~/components/ui/Badge.vue'
+import DropdownMenu from '~/components/ui/DropdownMenu.vue'
+import DropdownMenuTrigger from '~/components/ui/DropdownMenuTrigger.vue'
+import DropdownMenuContent from '~/components/ui/DropdownMenuContent.vue'
+import DropdownMenuItem from '~/components/ui/DropdownMenuItem.vue'
+import DropdownMenuSeparator from '~/components/ui/DropdownMenuSeparator.vue'
+
 // Set page title
 useHead({
   title: 'Quản lý người dùng - HNI Operations'
@@ -157,7 +184,7 @@ const users = [
     email: 'an.nguyen@hni.com',
     role: 'admin',
     status: 'active',
-    avatar: '/placeholder-avatar.jpg',
+    avatar: '/placeholder-avatar.svg',
     createdAt: '2024-01-15'
   },
   {
@@ -166,7 +193,7 @@ const users = [
     email: 'binh.tran@hni.com',
     role: 'user',
     status: 'active',
-    avatar: '/placeholder-avatar.jpg',
+    avatar: '/placeholder-avatar.svg',
     createdAt: '2024-01-20'
   },
   {
@@ -175,7 +202,7 @@ const users = [
     email: 'cuong.le@hni.com',
     role: 'moderator',
     status: 'inactive',
-    avatar: '/placeholder-avatar.jpg',
+    avatar: '/placeholder-avatar.svg',
     createdAt: '2024-01-25'
   },
   {
@@ -184,7 +211,7 @@ const users = [
     email: 'dung.pham@hni.com',
     role: 'user',
     status: 'pending',
-    avatar: '/placeholder-avatar.jpg',
+    avatar: '/placeholder-avatar.svg',
     createdAt: '2024-02-01'
   },
   {
@@ -193,7 +220,7 @@ const users = [
     email: 'em.hoang@hni.com',
     role: 'user',
     status: 'active',
-    avatar: '/placeholder-avatar.jpg',
+    avatar: '/placeholder-avatar.svg',
     createdAt: '2024-02-05'
   }
 ]

@@ -6,22 +6,8 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
-    '@vueuse/nuxt',
-    'shadcn-nuxt'
+    '@vueuse/nuxt'
   ],
-
-  // shadcn-nuxt configuration
-  shadcn: {
-    /**
-     * Prefix for all the imported component
-     */
-    prefix: '',
-    /**
-     * Directory that the component lives in.
-     * @default "./components/ui"
-     */
-    componentDir: './components/ui'
-  },
 
   // Color mode configuration
   colorMode: {

@@ -1,12 +1,9 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div>
-      <h2 class="text-2xl font-bold tracking-tight">Dashboard</h2>
-      <p class="text-muted-foreground">
-        Tổng quan về hoạt động hệ thống
-      </p>
-    </div>
+    <PageHeader 
+      title="Dashboard"
+    />
 
     <!-- Stats Cards -->
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -101,6 +98,13 @@ import {
   BarChart3,
   Settings
 } from 'lucide-vue-next'
+
+// Import UI components explicitly
+import Card from '~/components/ui/Card.vue'
+import CardHeader from '~/components/ui/CardHeader.vue'
+import CardTitle from '~/components/ui/CardTitle.vue'
+import CardContent from '~/components/ui/CardContent.vue'
+import Button from '~/components/ui/Button.vue'
 
 // Set page title
 useHead({

@@ -1,12 +1,9 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div>
-      <h2 class="text-2xl font-bold tracking-tight">Cài đặt hệ thống</h2>
-      <p class="text-muted-foreground">
-        Quản lý cấu hình và thiết lập hệ thống
-      </p>
-    </div>
+    <PageHeader 
+      title="Cài đặt hệ thống"
+    />
 
     <!-- Settings Sections -->
     <div class="grid gap-6">
@@ -186,6 +183,21 @@
 </template>
 
 <script setup lang="ts">
+// Import UI components explicitly
+import Button from '~/components/ui/Button.vue'
+import Card from '~/components/ui/Card.vue'
+import CardHeader from '~/components/ui/CardHeader.vue'
+import CardTitle from '~/components/ui/CardTitle.vue'
+import CardContent from '~/components/ui/CardContent.vue'
+import CardDescription from '~/components/ui/CardDescription.vue'
+import Input from '~/components/ui/Input.vue'
+import Label from '~/components/ui/Label.vue'
+import Select from '~/components/ui/Select.vue'
+import SelectTrigger from '~/components/ui/SelectTrigger.vue'
+import SelectValue from '~/components/ui/SelectValue.vue'
+import SelectContent from '~/components/ui/SelectContent.vue'
+import SelectItem from '~/components/ui/SelectItem.vue'
+
 // Set page title
 useHead({
   title: 'Cài đặt hệ thống - HNI Operations'
