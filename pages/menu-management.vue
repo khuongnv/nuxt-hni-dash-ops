@@ -436,10 +436,86 @@ const parentMenus = computed(() => {
 // Methods
 const loadMenus = async () => {
   try {
-    const response = await $fetch('/data/menus.json')
+    const response = await $fetch('/menus.json')
     menus.value = response
+    console.log('Loaded menus:', response)
   } catch (error) {
     console.error('Error loading menus:', error)
+    // Fallback data if file not found
+    menus.value = [
+      {
+        id: 1,
+        name: "Dashboard",
+        href: "/dashboard",
+        icon: "LayoutDashboard",
+        order: 1,
+        isActive: true,
+        parentId: null,
+        level: 1,
+        createdAt: "2024-01-15T08:00:00Z",
+        updatedAt: "2024-01-15T08:00:00Z"
+      },
+      {
+        id: 2,
+        name: "Quản lý người dùng",
+        href: "/users",
+        icon: "Users",
+        order: 2,
+        isActive: true,
+        parentId: null,
+        level: 1,
+        createdAt: "2024-01-15T08:00:00Z",
+        updatedAt: "2024-01-15T08:00:00Z"
+      },
+      {
+        id: 3,
+        name: "Báo cáo & Thống kê",
+        href: "/reports",
+        icon: "BarChart3",
+        order: 3,
+        isActive: true,
+        parentId: null,
+        level: 1,
+        createdAt: "2024-01-15T08:00:00Z",
+        updatedAt: "2024-01-15T08:00:00Z"
+      },
+      {
+        id: 4,
+        name: "Cài đặt hệ thống",
+        href: "/settings",
+        icon: "Settings",
+        order: 4,
+        isActive: true,
+        parentId: null,
+        level: 1,
+        createdAt: "2024-01-15T08:00:00Z",
+        updatedAt: "2024-01-15T08:00:00Z"
+      },
+      {
+        id: 5,
+        name: "Quản lý Menu",
+        href: "/menu-management",
+        icon: "Menu",
+        order: 5,
+        isActive: true,
+        parentId: null,
+        level: 1,
+        createdAt: "2024-01-15T08:00:00Z",
+        updatedAt: "2024-01-15T08:00:00Z"
+      },
+      {
+        id: 6,
+        name: "Giới thiệu",
+        href: "/about",
+        icon: "Info",
+        order: 6,
+        isActive: true,
+        parentId: null,
+        level: 1,
+        createdAt: "2024-01-15T08:00:00Z",
+        updatedAt: "2024-01-15T08:00:00Z"
+      }
+    ]
   }
 }
 

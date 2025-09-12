@@ -196,7 +196,11 @@ import {
   Settings,
   ChevronDown,
   Info,
-  Menu
+  Menu,
+  Plus,
+  Edit,
+  Trash2,
+  Search
 } from 'lucide-vue-next'
 
 interface Props {
@@ -210,39 +214,79 @@ const route = useRoute()
 // Submenu state - sẵn sàng cho việc mở rộng
 const openSubmenus = ref<string[]>([])
 
-// Navigation items - hiện tại đơn giản, nhưng có thể mở rộng thành đa cấp
-const navigationItems = [
-  {
-    name: 'Dashboard',
-    href: '/dashboard',
-    icon: LayoutDashboard
-  },
-  {
-    name: 'Quản lý người dùng',
-    href: '/users',
-    icon: Users
-  },
-  {
-    name: 'Báo cáo & Thống kê',
-    href: '/reports',
-    icon: BarChart3
-  },
-  {
-    name: 'Cài đặt hệ thống',
-    href: '/settings',
-    icon: Settings
-  },
-  {
-    name: 'Quản lý Menu',
-    href: '/menu-management',
-    icon: Menu
-  },
-  {
-    name: 'Giới thiệu',
-    href: '/about',
-    icon: Info
+// Navigation items - load từ file JSON
+const navigationItems = ref<any[]>([])
+
+// Load menu data from JSON file
+const loadMenuData = async () => {
+  try {
+    const response = await $fetch('/menus.json')
+    // Filter only active menus and sort by order
+    const activeMenus = response
+      .filter((menu: any) => menu.isActive)
+      .sort((a: any, b: any) => a.order - b.order)
+    
+    // Convert to sidebar format
+    navigationItems.value = activeMenus.map((menu: any) => ({
+      name: menu.name,
+      href: menu.href,
+      icon: getIconComponent(menu.icon),
+      children: menu.children || []
+    }))
+  } catch (error) {
+    console.error('Error loading menu data:', error)
+    // Fallback to static data
+    navigationItems.value = [
+      {
+        name: 'Dashboard',
+        href: '/dashboard',
+        icon: LayoutDashboard
+      },
+      {
+        name: 'Quản lý người dùng',
+        href: '/users',
+        icon: Users
+      },
+      {
+        name: 'Báo cáo & Thống kê',
+        href: '/reports',
+        icon: BarChart3
+      },
+      {
+        name: 'Cài đặt hệ thống',
+        href: '/settings',
+        icon: Settings
+      },
+      {
+        name: 'Quản lý Menu',
+        href: '/menu-management',
+        icon: Menu
+      },
+      {
+        name: 'Giới thiệu',
+        href: '/about',
+        icon: Info
+      }
+    ]
   }
-]
+}
+
+// Get icon component by name
+const getIconComponent = (iconName: string) => {
+  const icons: any = {
+    LayoutDashboard,
+    Users,
+    BarChart3,
+    Settings,
+    Menu,
+    Info,
+    Plus: Plus,
+    Edit: Edit,
+    Trash2: Trash2,
+    Search: Search
+  }
+  return icons[iconName] || Menu
+}
 
 // Toggle submenu - sẵn sàng cho việc mở rộng
 const toggleSubmenu = (menuName: string) => {
@@ -264,6 +308,11 @@ const isSubmenuActive = (children: any[]) => {
   if (!children) return false
   return children.some(child => isActive(child.href))
 }
+
+// Load menu data on component mount
+onMounted(() => {
+  loadMenuData()
+})
 </script>
 
 <style scoped>
