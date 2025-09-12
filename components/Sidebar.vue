@@ -10,211 +10,47 @@
 
     <!-- Navigation -->
     <nav class="flex-1 py-6 space-y-1 transition-all duration-300" :class="collapsed ? 'px-2' : 'px-4'">
-      <template v-for="item in navigationItems" :key="item.name">
-        <!-- Menu item with submenu -->
-        <div v-if="item.children && item.children.length > 0">
-          <button
-            @click="toggleSubmenu(item.name)"
-            class="flex items-center w-full rounded-lg text-sm font-medium transition-all duration-200 relative group"
-            :class="[
-              collapsed ? 'px-2 py-2 justify-center' : 'px-3 py-2 space-x-3',
-              isActive(item.href)
-                ? 'bg-primary text-primary-foreground'
-                : isSubmenuActive(item.children)
-                  ? 'bg-accent/50 text-accent-foreground'
-                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-            ]"
-          >
-            <component :is="item.icon" class="h-5 w-5 flex-shrink-0" />
-            <Transition name="fade" mode="out-in">
-              <span v-if="!collapsed" class="whitespace-nowrap flex-1 text-left">{{ item.name }}</span>
-            </Transition>
-            <Transition name="fade" mode="out-in">
-              <ChevronDown 
-                v-if="!collapsed" 
-                class="h-4 w-4 transition-transform duration-200"
-                :class="{ 'rotate-180': openSubmenus.includes(item.name) }"
-              />
-            </Transition>
-            
-            <!-- Tooltip for collapsed state -->
-            <div 
-              v-if="collapsed" 
-              class="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50"
-            >
-              {{ item.name }}
-              <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-popover"></div>
-            </div>
-          </button>
-          
-          <!-- Submenu Level 2 -->
-          <Transition name="slide-down">
-            <div v-if="!collapsed && openSubmenus.includes(item.name)" class="ml-6 mt-1 space-y-1">
-              <template v-for="subItem in item.children" :key="subItem.name">
-                <!-- Submenu with children (Level 3) -->
-                <div v-if="subItem.children && subItem.children.length > 0">
-                  <button
-                    @click="toggleSubmenu(subItem.name)"
-                    class="flex items-center w-full rounded-lg text-sm font-medium transition-all duration-200 px-3 py-2"
-                    :class="[
-                      isActive(subItem.href)
-                        ? 'bg-primary/20 text-primary'
-                        : isSubmenuActive(subItem.children)
-                          ? 'bg-accent/30 text-accent-foreground'
-                          : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                    ]"
-                  >
-                    <component :is="subItem.icon" class="h-4 w-4 flex-shrink-0 mr-3" />
-                    <span class="whitespace-nowrap flex-1 text-left">{{ subItem.name }}</span>
-                    <ChevronDown 
-                      class="h-3 w-3 transition-transform duration-200"
-                      :class="{ 'rotate-180': openSubmenus.includes(subItem.name) }"
-                    />
-                  </button>
-                  
-                  <!-- Submenu Level 3 -->
-                  <Transition name="slide-down">
-                    <div v-if="openSubmenus.includes(subItem.name)" class="ml-6 mt-1 space-y-1">
-                      <template v-for="subSubItem in subItem.children" :key="subSubItem.name">
-                        <!-- Submenu with children (Level 4) -->
-                        <div v-if="subSubItem.children && subSubItem.children.length > 0">
-                          <button
-                            @click="toggleSubmenu(subSubItem.name)"
-                            class="flex items-center w-full rounded-lg text-sm font-medium transition-all duration-200 px-3 py-2"
-                            :class="[
-                              isActive(subSubItem.href)
-                                ? 'bg-primary/20 text-primary'
-                                : isSubmenuActive(subSubItem.children)
-                                  ? 'bg-accent/30 text-accent-foreground'
-                                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                            ]"
-                          >
-                            <component :is="subSubItem.icon" class="h-4 w-4 flex-shrink-0 mr-3" />
-                            <span class="whitespace-nowrap flex-1 text-left">{{ subSubItem.name }}</span>
-                            <ChevronDown 
-                              class="h-3 w-3 transition-transform duration-200"
-                              :class="{ 'rotate-180': openSubmenus.includes(subSubItem.name) }"
-                            />
-                          </button>
-                          
-                          <!-- Submenu Level 4 -->
-                          <Transition name="slide-down">
-                            <div v-if="openSubmenus.includes(subSubItem.name)" class="ml-6 mt-1 space-y-1">
-                              <template v-for="subSubSubItem in subSubItem.children" :key="subSubSubItem.name">
-                                <NuxtLink
-                                  :to="subSubSubItem.href"
-                                  class="flex items-center w-full rounded-lg text-sm font-medium transition-all duration-200 px-3 py-2"
-                                  :class="[
-                                    isActive(subSubSubItem.href)
-                                      ? 'bg-primary/20 text-primary'
-                                      : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                                  ]"
-                                >
-                                  <component :is="subSubSubItem.icon" class="h-4 w-4 flex-shrink-0 mr-3" />
-                                  <span class="whitespace-nowrap flex-1 text-left">{{ subSubSubItem.name }}</span>
-                                </NuxtLink>
-                              </template>
-                            </div>
-                          </Transition>
-                        </div>
-                        <!-- Submenu Level 3 without children -->
-                        <div v-else>
-                          <NuxtLink
-                            :to="subSubItem.href"
-                            class="flex items-center w-full rounded-lg text-sm font-medium transition-all duration-200 px-3 py-2"
-                            :class="[
-                              isActive(subSubItem.href)
-                                ? 'bg-primary/20 text-primary'
-                                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                            ]"
-                          >
-                            <component :is="subSubItem.icon" class="h-4 w-4 flex-shrink-0 mr-3" />
-                            <span class="whitespace-nowrap flex-1 text-left">{{ subSubItem.name }}</span>
-                          </NuxtLink>
-                        </div>
-                      </template>
-                    </div>
-                  </Transition>
-                </div>
-                <!-- Submenu Level 2 without children -->
-                <div v-else>
-                  <NuxtLink
-                    :to="subItem.href"
-                    class="flex items-center w-full rounded-lg text-sm font-medium transition-all duration-200 px-3 py-2"
-                    :class="[
-                      isActive(subItem.href)
-                        ? 'bg-primary/20 text-primary'
-                        : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                    ]"
-                  >
-                    <component :is="subItem.icon" class="h-4 w-4 flex-shrink-0 mr-3" />
-                    <span class="whitespace-nowrap flex-1 text-left">{{ subItem.name }}</span>
-                  </NuxtLink>
-                </div>
-              </template>
-            </div>
-          </Transition>
-        </div>
-        <!-- Menu item without submenu -->
-        <div v-else>
-          <NuxtLink
-            :to="item.href"
-            class="flex items-center w-full rounded-lg text-sm font-medium transition-all duration-200 relative group"
-            :class="[
-              collapsed ? 'px-2 py-2 justify-center' : 'px-3 py-2 space-x-3',
-              isActive(item.href)
-                ? 'bg-primary text-primary-foreground'
-                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-            ]"
-          >
-            <component :is="item.icon" class="h-5 w-5 flex-shrink-0" />
-            <Transition name="fade" mode="out-in">
-              <span v-if="!collapsed" class="whitespace-nowrap flex-1 text-left">{{ item.name }}</span>
-            </Transition>
-            
-            <!-- Tooltip for collapsed state -->
-            <div 
-              v-if="collapsed" 
-              class="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50"
-            >
-              {{ item.name }}
-              <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-popover"></div>
-            </div>
-          </NuxtLink>
-        </div>
-      </template>
+      <MenuItem
+        v-for="item in navigationItems"
+        :key="item.name"
+        :item="item"
+        :level="0"
+        :collapsed="collapsed"
+        :open-submenus="openSubmenus"
+        :toggle-submenu="toggleSubmenu"
+        :is-active="isActive"
+        :is-submenu-active="isSubmenuActive"
+      />
     </nav>
-
   </aside>
 </template>
 
 <script setup lang="ts">
-import {
-  LayoutDashboard,
-  Users,
-  BarChart3,
-  Settings,
-  ChevronDown,
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { 
+  LayoutDashboard, 
+  Users, 
+  BarChart3, 
+  Settings, 
+  Menu, 
   Info,
-  Menu,
   Plus,
-  Edit,
-  Trash2,
-  Search
+  Shield,
+  Lock,
+  Key
 } from 'lucide-vue-next'
+import MenuItem from '~/components/ui/MenuItem.vue'
 
-interface Props {
+// Props
+const props = defineProps<{
   collapsed: boolean
-}
+}>()
 
-defineProps<Props>()
-
+// Route
 const route = useRoute()
 
-// Submenu state - sẵn sàng cho việc mở rộng
-const openSubmenus = ref<string[]>([])
-
-// Navigation items - sử dụng dữ liệu tĩnh
+// Navigation items - sử dụng dữ liệu tĩnh với menu phân tầng
 const navigationItems = ref([
   {
     name: 'Dashboard',
@@ -224,17 +60,82 @@ const navigationItems = ref([
   {
     name: 'Quản lý người dùng',
     href: '/admin/users',
-    icon: Users
+    icon: Users,
+    children: [
+      {
+        name: 'Danh sách người dùng',
+        href: '/admin/users/list',
+        icon: Users
+      },
+      {
+        name: 'Thêm người dùng',
+        href: '/admin/users/add',
+        icon: Plus
+      },
+      {
+        name: 'Phân quyền',
+        href: '/admin/users/roles',
+        icon: Settings,
+        children: [
+          {
+            name: 'Quản trị viên',
+            href: '/admin/users/roles/admin',
+            icon: Shield
+          },
+          {
+            name: 'Người dùng thường',
+            href: '/admin/users/roles/user',
+            icon: Users
+          }
+        ]
+      }
+    ]
   },
   {
     name: 'Báo cáo & Thống kê',
     href: '/system/reports',
-    icon: BarChart3
+    icon: BarChart3,
+    children: [
+      {
+        name: 'Báo cáo doanh thu',
+        href: '/system/reports/revenue',
+        icon: BarChart3
+      },
+      {
+        name: 'Báo cáo người dùng',
+        href: '/system/reports/users',
+        icon: Users
+      }
+    ]
   },
   {
     name: 'Cài đặt hệ thống',
     href: '/system/settings',
-    icon: Settings
+    icon: Settings,
+    children: [
+      {
+        name: 'Cấu hình chung',
+        href: '/system/settings/general',
+        icon: Settings
+      },
+      {
+        name: 'Bảo mật',
+        href: '/system/settings/security',
+        icon: Shield,
+        children: [
+          {
+            name: 'Mật khẩu',
+            href: '/system/settings/security/password',
+            icon: Key
+          },
+          {
+            name: 'Xác thực 2FA',
+            href: '/system/settings/security/2fa',
+            icon: Lock
+          }
+        ]
+      }
+    ]
   },
   {
     name: 'Quản lý Menu hệ thống',
@@ -248,14 +149,20 @@ const navigationItems = ref([
   }
 ])
 
+// Submenu state - mặc định mở tất cả menu tầng 1 có children
+const openSubmenus = ref([
+  'Quản lý người dùng',
+  'Báo cáo & Thống kê', 
+  'Cài đặt hệ thống'
+])
 
-// Toggle submenu - sẵn sàng cho việc mở rộng
-const toggleSubmenu = (menuName: string) => {
-  const index = openSubmenus.value.indexOf(menuName)
+// Toggle submenu
+const toggleSubmenu = (name: string) => {
+  const index = openSubmenus.value.indexOf(name)
   if (index > -1) {
     openSubmenus.value.splice(index, 1)
   } else {
-    openSubmenus.value.push(menuName)
+    openSubmenus.value.push(name)
   }
 }
 
@@ -264,12 +171,15 @@ const isActive = (href: string) => {
   return route.path === href
 }
 
-// Check if submenu is active - sẵn sàng cho việc mở rộng
+// Check if any submenu item is active
 const isSubmenuActive = (children: any[]) => {
-  if (!children) return false
-  return children.some(child => isActive(child.href))
+  return children.some(child => {
+    if (child.children) {
+      return isSubmenuActive(child.children) || isActive(child.href)
+    }
+    return isActive(child.href)
+  })
 }
-
 </script>
 
 <style scoped>

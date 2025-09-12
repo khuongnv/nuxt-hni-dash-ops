@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="h-full flex flex-col space-y-6">
     <!-- Page Header -->
     <PageHeader 
       title="Giới thiệu về chương trình"

@@ -9,6 +9,23 @@ export default defineNuxtConfig({
     '@vueuse/nuxt'
   ],
 
+  // Performance optimizations
+  experimental: {
+    payloadExtraction: false,
+    inlineSSRStyles: false
+  },
+
+  // Build optimizations
+  build: {
+    transpile: ['lucide-vue-next']
+  },
+
+  // Nitro optimizations
+  nitro: {
+    compressPublicAssets: true,
+    minify: true
+  },
+
   // Color mode configuration
   colorMode: {
     preference: 'system', // default value of $colorMode.preference
@@ -31,7 +48,13 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Internal dashboard for HNI operations' }
+        { name: 'description', content: 'Internal dashboard for HNI operations' },
+        { name: 'theme-color', content: '#1e40af' },
+        { name: 'robots', content: 'noindex, nofollow' }
+      ],
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }
       ]
     }
   },
@@ -40,6 +63,19 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       appName: 'HNI Dashboard Operations'
+    }
+  },
+
+  // Vite optimizations
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'lucide-icons': ['lucide-vue-next']
+          }
+        }
+      }
     }
   }
 })

@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="h-full flex flex-col space-y-6">
     <!-- Page Header -->
     <PageHeader title="Quản lý Menu hệ thống">
       <template #actions>
@@ -53,9 +53,10 @@
     </Card>
 
     <!-- Menu Table -->
-    <Card>
-      <CardContent class="p-0">
-        <Table>
+    <Card class="flex-1 flex flex-col">
+      <CardContent class="p-0 flex-1 flex flex-col">
+        <div class="flex-1 overflow-auto">
+          <Table>
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
@@ -122,6 +123,7 @@
             </TableRow>
           </TableBody>
         </Table>
+        </div>
       </CardContent>
     </Card>
 

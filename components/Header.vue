@@ -34,7 +34,6 @@
           <DropdownMenuTrigger as-child>
             <Button variant="ghost" class="relative h-9 w-9 rounded-full hover:bg-accent/50 transition-colors p-0">
               <Avatar class="h-8 w-8">
-                <AvatarImage src="/placeholder-avatar.svg" alt="User" />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
             </Button>
@@ -90,7 +89,6 @@ import DropdownMenuLabel from '~/components/ui/DropdownMenuLabel.vue'
 import DropdownMenuSeparator from '~/components/ui/DropdownMenuSeparator.vue'
 import DropdownMenuItem from '~/components/ui/DropdownMenuItem.vue'
 import Avatar from '~/components/ui/Avatar.vue'
-import AvatarImage from '~/components/ui/AvatarImage.vue'
 import AvatarFallback from '~/components/ui/AvatarFallback.vue'
 
 interface Props {
