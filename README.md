@@ -2,6 +2,10 @@
 
 Dashboard nội bộ được xây dựng với Nuxt 3 và shadcn-vue cho việc quản lý và giám sát hoạt động hệ thống.
 
+## 🔗 GitHub Repository
+
+**GitHub Repository**: [https://github.com/khuongnv/nuxt-hni-dash-ops](https://github.com/khuongnv/nuxt-hni-dash-ops)
+
 ## 🚀 Tính năng
 
 - **Dashboard tổng quan**: Hiển thị các chỉ số quan trọng và biểu đồ
@@ -25,8 +29,8 @@ Dashboard nội bộ được xây dựng với Nuxt 3 và shadcn-vue cho việc
 
 1. Clone repository:
 ```bash
-git clone https://github.com/your-username/nuxtjs-hni-dash-ops.git
-cd nuxtjs-hni-dash-ops
+git clone https://github.com/khuongnv/nuxt-hni-dash-ops.git
+cd nuxt-hni-dash-ops
 ```
 
 2. Cài đặt dependencies:

@@ -22,6 +22,42 @@
         </CardContent>
       </Card>
 
+      <!-- GitHub Repository -->
+      <Card>
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2">
+            <Github class="w-5 h-5" />
+            GitHub Repository
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-4">
+            <p class="text-muted-foreground">
+              Mã nguồn của dự án được lưu trữ và quản lý trên GitHub:
+            </p>
+            <div class="flex items-center gap-3 p-4 bg-muted/30 rounded-lg">
+              <Github class="w-5 h-5 text-muted-foreground" />
+              <div>
+                <p class="font-medium">Repository</p>
+                <a 
+                  href="https://github.com/khuongnv/nuxt-hni-dash-ops" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="text-primary hover:underline text-sm"
+                >
+                  https://github.com/khuongnv/nuxt-hni-dash-ops
+                </a>
+              </div>
+            </div>
+            <div class="text-sm text-muted-foreground space-y-1">
+              <p>• Clone repository: <code class="bg-muted px-1 rounded">git clone https://github.com/khuongnv/nuxt-hni-dash-ops.git</code></p>
+              <p>• Xem mã nguồn, tạo issues, và đóng góp vào dự án</p>
+              <p>• Theo dõi lịch sử commit và các phiên bản</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <!-- Features -->
       <Card>
         <CardHeader>
@@ -331,7 +367,8 @@ import {
   LayoutDashboard,
   Users,
   BarChart3,
-  Settings
+  Settings,
+  Github
 } from 'lucide-vue-next'
 
 // Import UI components
