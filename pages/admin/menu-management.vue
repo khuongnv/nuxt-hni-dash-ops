@@ -128,18 +128,27 @@
     <!-- Pagination -->
     <div v-if="totalPages > 1" class="flex items-center justify-between">
       <div class="text-sm text-muted-foreground">
+        Debug: menus={{ menus.length }}, filtered={{ filteredMenus.length }}, paginated={{ paginatedMenus.length }}
+        <br>
         Hiển thị {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, filteredMenus.length) }} 
         trong tổng số {{ filteredMenus.length }} menu
       </div>
       <div class="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          @click="goToPage(currentPage - 1)"
-          :disabled="currentPage === 1"
-        >
-          Trước
-        </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="loadMenus"
+          >
+            Test Load
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="goToPage(currentPage - 1)"
+            :disabled="currentPage === 1"
+          >
+            Trước
+          </Button>
         <div class="flex items-center gap-1">
           <Button
             v-for="page in visiblePages"
@@ -303,7 +312,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { 
   Plus, Edit, Trash2, Search, CheckCircle, AlertCircle, X,
   LayoutDashboard, Users, BarChart3, Settings, Menu, Info
@@ -624,5 +633,26 @@ const showToast = (type: 'success' | 'error', message: string) => {
   }, 3000)
 }
 
+// Load menus from API using useFetch
+const { data: apiResponse, pending: apiLoading, refresh: refreshMenus } = await useFetch('/api/menus', {
+  server: false,
+  default: () => ({ success: false, data: [] })
+})
+
+// Watch for API response and update menus
+watch(apiResponse, (newResponse) => {
+  if (newResponse && newResponse.success && newResponse.data) {
+    menus.value = newResponse.data
+    console.log('Menus loaded from API:', newResponse.data)
+  }
+}, { immediate: true })
+
+// Watch for loading state
+watch(apiLoading, (newLoading) => {
+  loading.value = newLoading
+})
+
+// Alias for refreshMenus (used in other functions)
+const loadMenus = refreshMenus
 
 </script>
