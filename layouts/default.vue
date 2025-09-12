@@ -37,23 +37,25 @@ const toggleSidebar = () => {
 
 // Responsive sidebar handling
 onMounted(() => {
-  const handleResize = () => {
-    // On mobile, always collapse sidebar
-    if (window.innerWidth < 1024) {
-      sidebarCollapsed.value = true
-    } else {
-      // On desktop, keep current state or default to expanded
-      if (sidebarCollapsed.value === undefined) {
-        sidebarCollapsed.value = false
+  if (process.client) {
+    const handleResize = () => {
+      // On mobile, always collapse sidebar
+      if (window.innerWidth < 1024) {
+        sidebarCollapsed.value = true
+      } else {
+        // On desktop, keep current state or default to expanded
+        if (sidebarCollapsed.value === undefined) {
+          sidebarCollapsed.value = false
+        }
       }
     }
+    
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    
+    onUnmounted(() => {
+      window.removeEventListener('resize', handleResize)
+    })
   }
-  
-  handleResize()
-  window.addEventListener('resize', handleResize)
-  
-  onUnmounted(() => {
-    window.removeEventListener('resize', handleResize)
-  })
 })
 </script>
