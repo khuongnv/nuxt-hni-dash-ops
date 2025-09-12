@@ -36,9 +36,11 @@ const toggleSidebar = () => {
 }
 
 // Responsive sidebar handling
+let handleResize: (() => void) | null = null
+
 onMounted(() => {
   if (process.client) {
-    const handleResize = () => {
+    handleResize = () => {
       // On mobile, always collapse sidebar
       if (window.innerWidth < 1024) {
         sidebarCollapsed.value = true
@@ -52,10 +54,12 @@ onMounted(() => {
     
     handleResize()
     window.addEventListener('resize', handleResize)
-    
-    onUnmounted(() => {
-      window.removeEventListener('resize', handleResize)
-    })
+  }
+})
+
+onUnmounted(() => {
+  if (process.client && handleResize) {
+    window.removeEventListener('resize', handleResize)
   }
 })
 </script>
