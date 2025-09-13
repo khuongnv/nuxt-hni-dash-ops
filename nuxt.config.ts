@@ -62,7 +62,9 @@ export default defineNuxtConfig({
   // Runtime config
   runtimeConfig: {
     public: {
-      appName: 'HNI Dashboard Operations'
+      appName: 'HNI Dashboard Operations',
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseAnonKey: process.env.SUPABASE_API_KEY
     }
   },
 

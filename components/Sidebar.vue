@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { 
   LayoutDashboard, 
@@ -50,111 +50,81 @@ const props = defineProps<{
 // Route
 const route = useRoute()
 
-// Navigation items - sử dụng dữ liệu tĩnh với menu phân tầng
-const navigationItems = ref([
-  {
-    name: 'Dashboard',
-    href: '/main/dashboard',
-    icon: LayoutDashboard
-  },
-  {
-    name: 'Quản lý người dùng',
-    href: '/admin/users',
-    icon: Users,
-    children: [
-      {
-        name: 'Danh sách người dùng',
-        href: '/admin/users/list',
-        icon: Users
-      },
-      {
-        name: 'Thêm người dùng',
-        href: '/admin/users/add',
-        icon: Plus
-      },
-      {
-        name: 'Phân quyền',
-        href: '/admin/users/roles',
-        icon: Settings,
-        children: [
-          {
-            name: 'Quản trị viên',
-            href: '/admin/users/roles/admin',
-            icon: Shield
-          },
-          {
-            name: 'Người dùng thường',
-            href: '/admin/users/roles/user',
-            icon: Users
-          }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Báo cáo & Thống kê',
-    href: '/system/reports',
-    icon: BarChart3,
-    children: [
-      {
-        name: 'Báo cáo doanh thu',
-        href: '/system/reports/revenue',
-        icon: BarChart3
-      },
-      {
-        name: 'Báo cáo người dùng',
-        href: '/system/reports/users',
-        icon: Users
-      }
-    ]
-  },
-  {
-    name: 'Cài đặt hệ thống',
-    href: '/system/settings',
-    icon: Settings,
-    children: [
-      {
-        name: 'Cấu hình chung',
-        href: '/system/settings/general',
-        icon: Settings
-      },
-      {
-        name: 'Bảo mật',
-        href: '/system/settings/security',
-        icon: Shield,
-        children: [
-          {
-            name: 'Mật khẩu',
-            href: '/system/settings/security/password',
-            icon: Key
-          },
-          {
-            name: 'Xác thực 2FA',
-            href: '/system/settings/security/2fa',
-            icon: Lock
-          }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Quản lý Menu hệ thống',
-    href: '/admin/menu-management',
-    icon: Menu
-  },
-  {
-    name: 'Giới thiệu',
-    href: '/main/about',
-    icon: Info
-  }
-])
+// Navigation items - sử dụng dữ liệu từ API Supabase
+const navigationItems = ref([])
 
-// Submenu state - mặc định mở tất cả menu tầng 1 có children
-const openSubmenus = ref([
-  'Quản lý người dùng',
-  'Báo cáo & Thống kê', 
-  'Cài đặt hệ thống'
-])
+// Icon mapping
+const iconMap: Record<string, any> = {
+  LayoutDashboard,
+  Users,
+  BarChart3,
+  Settings,
+  Menu,
+  Info,
+  Plus,
+  Shield,
+  Lock,
+  Key
+}
+
+// Load menus from API
+const loadMenus = async () => {
+  try {
+    const response = await $fetch('/api/menus')
+    if (response.success && response.data) {
+      // Transform API data to navigation format
+      const menus = response.data.filter((menu: any) => menu.is_active)
+      
+      // List of valid routes that have corresponding files
+      const validRoutes = [
+        '/main/dashboard',
+        '/admin/users',
+        '/system/settings',
+        '/system/reports',
+        '/main/about'
+      ]
+      
+      // Build navigation tree
+      const buildNavigationTree = (menus: any[], parentId: number | null = null): any[] => {
+        return menus
+          .filter(menu => menu.parent_id === parentId)
+          .filter(menu => validRoutes.includes(menu.href)) // Only include menus with valid routes
+          .sort((a, b) => a.order - b.order)
+          .map(menu => ({
+            name: menu.name,
+            href: menu.href,
+            icon: iconMap[menu.icon] || Menu,
+            children: buildNavigationTree(menus, menu.id)
+          }))
+      }
+      
+      navigationItems.value = buildNavigationTree(menus)
+    }
+  } catch (error) {
+    console.error('Error loading menus:', error)
+    // Fallback to static data if API fails
+    navigationItems.value = [
+      {
+        name: 'Dashboard',
+        href: '/main/dashboard',
+        icon: LayoutDashboard
+      },
+      {
+        name: 'Người dùng',
+        href: '/admin/users',
+        icon: Users
+      },
+      {
+        name: 'Hệ thống',
+        href: '/system/settings',
+        icon: Settings
+      }
+    ]
+  }
+}
+
+// Submenu state - sẽ được cập nhật động
+const openSubmenus = ref([])
 
 // Toggle submenu
 const toggleSubmenu = (name: string) => {
@@ -180,6 +150,11 @@ const isSubmenuActive = (children: any[]) => {
     return isActive(child.href)
   })
 }
+
+// Load menus on component mount
+onMounted(() => {
+  loadMenus()
+})
 </script>
 
 <style scoped>

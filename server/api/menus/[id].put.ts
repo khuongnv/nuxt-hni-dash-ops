@@ -1,5 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -9,7 +8,7 @@ export default defineEventHandler(async (event) => {
     if (!id || isNaN(Number(id))) {
       throw createError({
         statusCode: 400,
-        statusMessage: 'ID không hợp lệ'
+        statusMessage: 'ID menu không hợp lệ'
       })
     }
 
@@ -21,39 +20,48 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const filePath = join(process.cwd(), 'server/data/menus.json')
-    const data = readFileSync(filePath, 'utf-8')
-    const menus = JSON.parse(data)
+    const config = useRuntimeConfig()
     
-    const menuIndex = menus.findIndex((m: any) => m.id === Number(id))
-    
-    if (menuIndex === -1) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: 'Không tìm thấy menu'
-      })
-    }
-    
-    // Update menu
-    menus[menuIndex] = {
-      ...menus[menuIndex],
+    const supabase = createClient(
+      config.public.supabaseUrl,
+      config.public.supabaseAnonKey
+    )
+
+    const updateData = {
       name: body.name.trim(),
       href: body.href.trim(),
       icon: body.icon.trim(),
-      order: body.order || menus[menuIndex].order,
-      isActive: body.isActive !== undefined ? body.isActive : menus[menuIndex].isActive,
-      parentId: body.parentId !== undefined ? body.parentId : menus[menuIndex].parentId,
-      level: body.level || menus[menuIndex].level,
-      updatedAt: new Date().toISOString()
+      order: body.order || 1,
+      is_active: body.isActive !== undefined ? body.isActive : true,
+      parent_id: body.parentId || null,
+      level: body.level || 1,
+      updated_at: new Date().toISOString()
     }
-    
-    // Write back to file
-    writeFileSync(filePath, JSON.stringify(menus, null, 2), 'utf-8')
+
+    const { data, error } = await supabase
+      .from('menus')
+      .update(updateData)
+      .eq('id', Number(id))
+      .select()
+      .single()
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        throw createError({
+          statusCode: 404,
+          statusMessage: 'Không tìm thấy menu'
+        })
+      }
+      throw createError({
+        statusCode: 500,
+        statusMessage: `Lỗi Supabase: ${error.message}`
+      })
+    }
     
     return {
       success: true,
       message: 'Cập nhật menu hệ thống thành công',
-      data: menus[menuIndex]
+      data
     }
   } catch (error: any) {
     if (error.statusCode) {
@@ -65,3 +73,4 @@ export default defineEventHandler(async (event) => {
     })
   }
 })
+

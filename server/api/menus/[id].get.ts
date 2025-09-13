@@ -1,5 +1,4 @@
-import { readFileSync } from 'fs'
-import { join } from 'path'
+import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -8,20 +7,33 @@ export default defineEventHandler(async (event) => {
     if (!id || isNaN(Number(id))) {
       throw createError({
         statusCode: 400,
-        statusMessage: 'ID không hợp lệ'
+        statusMessage: 'ID menu không hợp lệ'
       })
     }
 
-    const filePath = join(process.cwd(), 'server/data/menus.json')
-    const data = readFileSync(filePath, 'utf-8')
-    const menus = JSON.parse(data)
+    const config = useRuntimeConfig()
     
-    const menu = menus.find((m: any) => m.id === Number(id))
-    
-    if (!menu) {
+    const supabase = createClient(
+      config.public.supabaseUrl,
+      config.public.supabaseAnonKey
+    )
+
+    const { data: menu, error } = await supabase
+      .from('menus')
+      .select('*')
+      .eq('id', Number(id))
+      .single()
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        throw createError({
+          statusCode: 404,
+          statusMessage: 'Không tìm thấy menu'
+        })
+      }
       throw createError({
-        statusCode: 404,
-        statusMessage: 'Không tìm thấy menu'
+        statusCode: 500,
+        statusMessage: `Lỗi Supabase: ${error.message}`
       })
     }
     
@@ -39,3 +51,4 @@ export default defineEventHandler(async (event) => {
     })
   }
 })
+

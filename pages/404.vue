@@ -22,6 +22,6 @@ useHead({
 
 // Navigation function
 const goHome = () => {
-  navigateTo('/dashboard')
+  navigateTo('/main/dashboard')
 }
 </script>

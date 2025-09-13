@@ -23,7 +23,9 @@ Dashboard nội bộ được xây dựng với Nuxt 3 và shadcn-vue cho việc
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide Vue Next
 - **TypeScript**: Hỗ trợ đầy đủ
-- **Color Mode**: @nuxtjs/color-mode
+- **Database**: PostgreSQL (Supabase)
+- **API**: Supabase REST API
+- **Authentication**: Supabase Auth
 
 ## 📦 Cài đặt
 
@@ -38,12 +40,22 @@ cd nuxt-hni-dash-ops
 npm install
 ```
 
-3. Chạy development server:
+3. Cấu hình environment variables:
+```bash
+# Tạo file .env
+cp .env.example .env
+
+# Cập nhật thông tin Supabase trong .env
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+4. Chạy development server:
 ```bash
 npm run dev
 ```
 
-4. Mở trình duyệt tại `http://localhost:3000`
+5. Mở trình duyệt tại `http://localhost:3000`
 
 ## 🏗️ Cấu trúc project
 
@@ -63,11 +75,18 @@ nuxtjs-hni-dash-ops/
 ├── layouts/
 │   └── default.vue           # Layout chính
 ├── pages/
-│   ├── dashboard.vue         # Trang dashboard
-│   ├── users.vue            # Quản lý người dùng
-│   ├── reports.vue          # Báo cáo & thống kê
-│   ├── settings.vue         # Cài đặt hệ thống
+│   ├── main/
+│   │   ├── dashboard.vue    # Trang dashboard
+│   │   └── about.vue        # Trang giới thiệu
+│   ├── admin/
+│   │   └── users.vue        # Quản lý người dùng
+│   ├── system/
+│   │   ├── reports.vue      # Báo cáo & thống kê
+│   │   └── settings.vue     # Cài đặt hệ thống
 │   └── index.vue            # Trang chủ (redirect)
+├── server/
+│   └── api/
+│       └── menus/           # API endpoints cho menu
 ├── lib/
 │   └── utils.ts             # Utility functions
 ├── nuxt.config.ts           # Cấu hình Nuxt
@@ -119,13 +138,31 @@ npm run preview
 npm run generate
 ```
 
-## 📝 Mock Data
+## 🗄️ Database & API
 
-Project hiện tại sử dụng mock data cho:
-- Danh sách người dùng
-- Báo cáo và thống kê
-- Hoạt động gần đây
-- Các chỉ số dashboard
+### Supabase PostgreSQL
+- **Database**: PostgreSQL được host trên Supabase
+- **Bảng chính**: `menus` - quản lý menu hệ thống
+- **Real-time**: Hỗ trợ real-time subscriptions
+- **Row Level Security**: Bảo mật dữ liệu với RLS
+
+### Supabase REST API
+- **Auto-generated**: API endpoints được tự động tạo
+- **CRUD Operations**: Đầy đủ các thao tác Create, Read, Update, Delete
+- **Authentication**: Tích hợp sẵn với Supabase Auth
+- **API Endpoints**:
+  ```bash
+  GET    /api/menus           # Lấy danh sách menu
+  POST   /api/menus           # Tạo menu mới
+  PUT    /api/menus/[id]      # Cập nhật menu
+  DELETE /api/menus/[id]      # Xóa menu
+  ```
+
+### Environment Variables
+```env
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_ANON_KEY=your-anon-key-here
+```
 
 ## 🚀 Deployment
 

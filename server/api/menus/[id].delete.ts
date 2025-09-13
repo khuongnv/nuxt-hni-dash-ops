@@ -1,5 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -8,35 +7,53 @@ export default defineEventHandler(async (event) => {
     if (!id || isNaN(Number(id))) {
       throw createError({
         statusCode: 400,
-        statusMessage: 'ID không hợp lệ'
+        statusMessage: 'ID menu không hợp lệ'
       })
     }
 
-    const filePath = join(process.cwd(), 'server/data/menus.json')
-    const data = readFileSync(filePath, 'utf-8')
-    const menus = JSON.parse(data)
+    const config = useRuntimeConfig()
     
-    const menuIndex = menus.findIndex((m: any) => m.id === Number(id))
-    
-    if (menuIndex === -1) {
+    const supabase = createClient(
+      config.public.supabaseUrl,
+      config.public.supabaseAnonKey
+    )
+
+    // Kiểm tra menu có tồn tại không
+    const { data: existingMenu, error: checkError } = await supabase
+      .from('menus')
+      .select('id')
+      .eq('id', Number(id))
+      .single()
+
+    if (checkError) {
+      if (checkError.code === 'PGRST116') {
+        throw createError({
+          statusCode: 404,
+          statusMessage: 'Không tìm thấy menu'
+        })
+      }
       throw createError({
-        statusCode: 404,
-        statusMessage: 'Không tìm thấy menu'
+        statusCode: 500,
+        statusMessage: `Lỗi Supabase: ${checkError.message}`
+      })
+    }
+
+    // Xóa menu
+    const { error } = await supabase
+      .from('menus')
+      .delete()
+      .eq('id', Number(id))
+
+    if (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: `Lỗi Supabase: ${error.message}`
       })
     }
     
-    const deletedMenu = menus[menuIndex]
-    
-    // Remove menu from array
-    menus.splice(menuIndex, 1)
-    
-    // Write back to file
-    writeFileSync(filePath, JSON.stringify(menus, null, 2), 'utf-8')
-    
     return {
       success: true,
-      message: 'Xóa menu hệ thống thành công',
-      data: deletedMenu
+      message: 'Xóa menu hệ thống thành công'
     }
   } catch (error: any) {
     if (error.statusCode) {

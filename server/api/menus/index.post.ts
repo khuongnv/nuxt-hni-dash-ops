@@ -1,5 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -13,35 +12,40 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const filePath = join(process.cwd(), 'server/data/menus.json')
-    const data = readFileSync(filePath, 'utf-8')
-    const menus = JSON.parse(data)
+    const config = useRuntimeConfig()
     
-    // Generate new ID
-    const newId = Math.max(...menus.map((m: any) => m.id), 0) + 1
-    
+    const supabase = createClient(
+      config.public.supabaseUrl,
+      config.public.supabaseAnonKey
+    )
+
     const newMenu = {
-      id: newId,
       name: body.name.trim(),
       href: body.href.trim(),
       icon: body.icon.trim(),
-      order: body.order || newId,
-      isActive: body.isActive !== undefined ? body.isActive : true,
-      parentId: body.parentId || null,
-      level: body.level || 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      order: body.order || 1,
+      is_active: body.isActive !== undefined ? body.isActive : true,
+      parent_id: body.parentId || null,
+      level: body.level || 1
     }
-    
-    menus.push(newMenu)
-    
-    // Write back to file
-    writeFileSync(filePath, JSON.stringify(menus, null, 2), 'utf-8')
+
+    const { data, error } = await supabase
+      .from('menus')
+      .insert(newMenu)
+      .select()
+      .single()
+
+    if (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: `Lỗi Supabase: ${error.message}`
+      })
+    }
     
     return {
       success: true,
       message: 'Thêm menu hệ thống thành công',
-      data: newMenu
+      data
     }
   } catch (error: any) {
     if (error.statusCode) {
