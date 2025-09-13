@@ -149,8 +149,16 @@
               <p class="text-sm text-muted-foreground">TypeScript</p>
             </div>
             <div class="p-4 border rounded-lg">
-              <h4 class="font-semibold mb-2">Color Mode</h4>
-              <p class="text-sm text-muted-foreground">@nuxtjs/color-mode</p>
+              <h4 class="font-semibold mb-2">Database</h4>
+              <p class="text-sm text-muted-foreground">PostgreSQL (Supabase)</p>
+            </div>
+            <div class="p-4 border rounded-lg">
+              <h4 class="font-semibold mb-2">API</h4>
+              <p class="text-sm text-muted-foreground">Supabase REST API</p>
+            </div>
+            <div class="p-4 border rounded-lg">
+              <h4 class="font-semibold mb-2">Authentication</h4>
+              <p class="text-sm text-muted-foreground">Supabase Auth</p>
             </div>
           </div>
         </CardContent>
@@ -173,10 +181,109 @@
 │   ├── Header.vue               # Header component
 │   └── Sidebar.vue              # Sidebar component
 ├── layouts/default.vue          # Layout chính
-├── pages/                       # Các trang ứng dụng
-├── lib/utils.ts                 # Utility functions
-├── nuxt.config.ts               # Cấu hình Nuxt
-└── tailwind.config.js           # Cấu hình Tailwind</code></pre>
+├── pages/
+│   ├── main/
+│   │   ├── dashboard.vue        # Trang dashboard
+│   │   └── about.vue           # Trang giới thiệu
+│   ├── admin/
+│   │   └── users.vue           # Quản lý người dùng
+│   ├── system/
+│   │   ├── reports.vue         # Báo cáo & thống kê
+│   │   └── settings.vue        # Cài đặt hệ thống
+│   └── index.vue               # Trang chủ (redirect)
+├── server/
+│   └── api/
+│       └── menus/              # API endpoints cho menu
+├── lib/utils.ts                # Utility functions
+├── nuxt.config.ts              # Cấu hình Nuxt
+└── tailwind.config.js          # Cấu hình Tailwind</code></pre>
+          </div>
+        </CardContent>
+      </Card>
+
+      <!-- Database & API -->
+      <Card>
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2">
+            <Database class="w-5 h-5" />
+            Database & API
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-6">
+            <!-- Supabase PostgreSQL -->
+            <div>
+              <h4 class="font-semibold mb-3">Supabase PostgreSQL</h4>
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Database</h5>
+                    <p class="text-xs text-muted-foreground">PostgreSQL được host trên Supabase</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Bảng chính</h5>
+                    <p class="text-xs text-muted-foreground">menus - quản lý menu hệ thống</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Real-time</h5>
+                    <p class="text-xs text-muted-foreground">Hỗ trợ real-time subscriptions</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Row Level Security</h5>
+                    <p class="text-xs text-muted-foreground">Bảo mật dữ liệu với RLS</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Supabase REST API -->
+            <div>
+              <h4 class="font-semibold mb-3">Supabase REST API</h4>
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Auto-generated</h5>
+                    <p class="text-xs text-muted-foreground">API endpoints được tự động tạo</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">CRUD Operations</h5>
+                    <p class="text-xs text-muted-foreground">Đầy đủ các thao tác Create, Read, Update, Delete</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Authentication</h5>
+                    <p class="text-xs text-muted-foreground">Tích hợp sẵn với Supabase Auth</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- API Endpoints -->
+            <div>
+              <h4 class="font-semibold mb-3">API Endpoints</h4>
+              <div class="bg-muted/50 p-4 rounded-lg">
+                <pre class="text-xs overflow-x-auto"><code>GET    /api/menus           # Lấy danh sách menu
+POST   /api/menus           # Tạo menu mới
+PUT    /api/menus/[id]      # Cập nhật menu
+DELETE /api/menus/[id]      # Xóa menu</code></pre>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -368,7 +475,8 @@ import {
   Users,
   BarChart3,
   Settings,
-  Github
+  Github,
+  Database
 } from 'lucide-vue-next'
 
 // Import UI components
