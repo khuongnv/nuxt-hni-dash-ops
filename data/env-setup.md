@@ -7,7 +7,7 @@ Tạo file `.env` trong thư mục gốc của dự án với nội dung:
 ```env
 # Supabase Configuration
 SUPABASE_URL=https://your-project-id.supabase.co
-SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_API_KEY=your-anon-key-here
 ```
 
 ## Lấy thông tin từ Supabase
@@ -17,7 +17,7 @@ SUPABASE_ANON_KEY=your-anon-key-here
 3. Vào **Settings** → **API**
 4. Copy các thông tin:
    - **Project URL** → `SUPABASE_URL`
-   - **anon/public key** → `SUPABASE_ANON_KEY`
+   - **anon/public key** → `SUPABASE_API_KEY`
 
 ## Cấu hình Vercel
 
@@ -27,7 +27,7 @@ Khi deploy lên Vercel, thêm environment variables trong Vercel Dashboard:
 2. Chọn **Environment Variables**
 3. Thêm:
    - `SUPABASE_URL` = https://your-project-id.supabase.co
-   - `SUPABASE_ANON_KEY` = your-anon-key-here
+   - `SUPABASE_API_KEY` = your-anon-key-here
 
 ## Lưu ý
 

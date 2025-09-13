@@ -161,7 +161,7 @@ npm run generate
 ### Environment Variables
 ```env
 SUPABASE_URL=https://your-project-id.supabase.co
-SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_API_KEY=your-anon-key-here
 ```
 
 ### Cấu hình Vercel Deployment
@@ -170,7 +170,7 @@ Khi deploy lên Vercel, cần thêm environment variables trong Vercel Dashboard
 1. Vào **Project Settings** → **Environment Variables**
 2. Thêm các biến:
    - `SUPABASE_URL` = https://your-project-id.supabase.co
-   - `SUPABASE_ANON_KEY` = your-anon-key-here
+   - `SUPABASE_API_KEY` = your-anon-key-here
 3. Redeploy project sau khi thêm environment variables
 
 **Lưu ý**: Không sử dụng service_role key cho client-side, chỉ dùng anon key.
