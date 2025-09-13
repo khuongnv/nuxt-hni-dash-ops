@@ -67,50 +67,196 @@
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div class="grid gap-4 md:grid-cols-2">
-            <div class="space-y-3">
-              <div class="flex items-start gap-3">
-                <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <h4 class="font-medium">Dashboard tổng quan</h4>
-                  <p class="text-sm text-muted-foreground">Hiển thị các chỉ số quan trọng và biểu đồ</p>
+          <div class="space-y-6">
+            <!-- Dashboard & Analytics -->
+            <div>
+              <h4 class="font-semibold mb-3 flex items-center gap-2">
+                <BarChart3 class="w-4 h-4" />
+                Dashboard & Analytics
+              </h4>
+              <div class="grid gap-3 md:grid-cols-2">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Dashboard tổng quan</h5>
+                    <p class="text-xs text-muted-foreground">Hiển thị các chỉ số quan trọng và biểu đồ</p>
+                  </div>
                 </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <h4 class="font-medium">Quản lý người dùng</h4>
-                  <p class="text-sm text-muted-foreground">CRUD operations cho tài khoản người dùng</p>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Revenue Reports</h5>
+                    <p class="text-xs text-muted-foreground">Báo cáo doanh thu và phân tích</p>
+                  </div>
                 </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <h4 class="font-medium">Báo cáo & Thống kê</h4>
-                  <p class="text-sm text-muted-foreground">Tạo và xem các báo cáo chi tiết</p>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">User Reports</h5>
+                    <p class="text-xs text-muted-foreground">Báo cáo người dùng và hoạt động</p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="space-y-3">
-              <div class="flex items-start gap-3">
-                <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <h4 class="font-medium">Cài đặt hệ thống</h4>
-                  <p class="text-sm text-muted-foreground">Cấu hình các tham số hệ thống</p>
+
+            <!-- User Management -->
+            <div>
+              <h4 class="font-semibold mb-3 flex items-center gap-2">
+                <Users class="w-4 h-4" />
+                Quản lý Người dùng
+              </h4>
+              <div class="grid gap-3 md:grid-cols-2">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">CRUD Operations</h5>
+                    <p class="text-xs text-muted-foreground">Tạo, đọc, cập nhật, xóa người dùng</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Role Management</h5>
+                    <p class="text-xs text-muted-foreground">Quản lý vai trò (Admin, User)</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">User Analytics</h5>
+                    <p class="text-xs text-muted-foreground">Thống kê và phân tích người dùng</p>
+                  </div>
                 </div>
               </div>
-              <div class="flex items-start gap-3">
-                <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <h4 class="font-medium">Dark/Light Mode</h4>
-                  <p class="text-sm text-muted-foreground">Hỗ trợ chuyển đổi theme</p>
+            </div>
+
+            <!-- System Notifications -->
+            <div>
+              <h4 class="font-semibold mb-3 flex items-center gap-2">
+                <Bell class="w-4 h-4" />
+                Quản lý Thông báo Hệ thống
+              </h4>
+              <div class="grid gap-3 md:grid-cols-2">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">System Notifications</h5>
+                    <p class="text-xs text-muted-foreground">Tạo và quản lý thông báo hệ thống</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Notification Types</h5>
+                    <p class="text-xs text-muted-foreground">4 loại: Info, Warning, Error, Success</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Status Management</h5>
+                    <p class="text-xs text-muted-foreground">Quản lý trạng thái (Active, Inactive)</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Date Scheduling</h5>
+                    <p class="text-xs text-muted-foreground">Lên lịch thông báo với start_at/end_at</p>
+                  </div>
                 </div>
               </div>
-              <div class="flex items-start gap-3">
-                <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <h4 class="font-medium">Responsive Design</h4>
-                  <p class="text-sm text-muted-foreground">Tối ưu cho desktop và mobile</p>
+            </div>
+
+            <!-- Menu Management -->
+            <div>
+              <h4 class="font-semibold mb-3 flex items-center gap-2">
+                <Menu class="w-4 h-4" />
+                Quản lý Menu & Navigation
+              </h4>
+              <div class="grid gap-3 md:grid-cols-2">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Dynamic Menu</h5>
+                    <p class="text-xs text-muted-foreground">Quản lý menu động từ database</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Menu Hierarchy</h5>
+                    <p class="text-xs text-muted-foreground">Hỗ trợ menu đa cấp</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Icon Management</h5>
+                    <p class="text-xs text-muted-foreground">Quản lý icon cho menu</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Settings -->
+            <div>
+              <h4 class="font-semibold mb-3 flex items-center gap-2">
+                <Settings class="w-4 h-4" />
+                Cài đặt Hệ thống
+              </h4>
+              <div class="grid gap-3 md:grid-cols-2">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">System Settings</h5>
+                    <p class="text-xs text-muted-foreground">Cấu hình các tham số hệ thống</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Security Settings</h5>
+                    <p class="text-xs text-muted-foreground">Cài đặt bảo mật (2FA, Password)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- UI/UX Features -->
+            <div>
+              <h4 class="font-semibold mb-3 flex items-center gap-2">
+                <Zap class="w-4 h-4" />
+                UI/UX Features
+              </h4>
+              <div class="grid gap-3 md:grid-cols-2">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Dark/Light Mode</h5>
+                    <p class="text-xs text-muted-foreground">Hỗ trợ chuyển đổi theme</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Responsive Design</h5>
+                    <p class="text-xs text-muted-foreground">Tối ưu cho desktop và mobile</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Error Handling</h5>
+                    <p class="text-xs text-muted-foreground">Xử lý lỗi toàn diện với ErrorBoundary</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <h5 class="font-medium text-sm">Loading States</h5>
+                    <p class="text-xs text-muted-foreground">Trạng thái loading cho tất cả operations</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -154,11 +300,15 @@
             </div>
             <div class="p-4 border rounded-lg">
               <h4 class="font-semibold mb-2">API</h4>
-              <p class="text-sm text-muted-foreground">Supabase REST API</p>
+              <p class="text-sm text-muted-foreground">Supabase REST API + Custom API Routes</p>
             </div>
             <div class="p-4 border rounded-lg">
               <h4 class="font-semibold mb-2">Authentication</h4>
               <p class="text-sm text-muted-foreground">Supabase Auth</p>
+            </div>
+            <div class="p-4 border rounded-lg">
+              <h4 class="font-semibold mb-2">Charts</h4>
+              <p class="text-sm text-muted-foreground">Chart.js với Vue-ChartJS</p>
             </div>
           </div>
         </CardContent>
@@ -175,28 +325,43 @@
         <CardContent>
           <div class="bg-muted/50 p-4 rounded-lg">
             <pre class="text-sm overflow-x-auto"><code>nuxtjs-hni-dash-ops/
-├── assets/css/main.css          # Tailwind CSS và custom styles
+├── assets/css/main.css                    # Tailwind CSS và custom styles
 ├── components/
-│   ├── ui/                      # shadcn-vue components
-│   ├── Header.vue               # Header component
-│   └── Sidebar.vue              # Sidebar component
-├── layouts/default.vue          # Layout chính
+│   ├── ui/                               # shadcn-vue components
+│   ├── charts/                           # Chart components
+│   ├── Header.vue                        # Header component
+│   ├── Sidebar.vue                       # Sidebar component
+│   ├── PageHeader.vue                    # Page header component
+│   └── ErrorBoundary.vue                 # Error boundary component
+├── composables/                          # Vue composables
+│   ├── useSupabase.ts                    # Supabase client
+│   ├── useSystemNotifications.ts         # System notifications logic
+│   ├── useErrorHandler.ts                # Error handling
+│   ├── useIcons.ts                       # Icon management
+│   └── ...
+├── layouts/default.vue                   # Layout chính
 ├── pages/
 │   ├── main/
-│   │   ├── dashboard.vue        # Trang dashboard
-│   │   └── about.vue           # Trang giới thiệu
+│   │   ├── dashboard.vue                 # Trang dashboard
+│   │   └── about.vue                    # Trang giới thiệu
 │   ├── admin/
-│   │   └── users.vue           # Quản lý người dùng
+│   │   ├── users.vue                    # Quản lý người dùng
+│   │   ├── menus.vue                    # Quản lý menu
+│   │   └── system-notifications.vue     # Quản lý thông báo hệ thống
 │   ├── system/
-│   │   ├── reports.vue         # Báo cáo & thống kê
-│   │   └── settings.vue        # Cài đặt hệ thống
-│   └── index.vue               # Trang chủ (redirect)
+│   │   ├── reports.vue                  # Báo cáo & thống kê
+│   │   └── settings.vue                 # Cài đặt hệ thống
+│   └── index.vue                        # Trang chủ (redirect)
 ├── server/
 │   └── api/
-│       └── menus/              # API endpoints cho menu
-├── lib/utils.ts                # Utility functions
-├── nuxt.config.ts              # Cấu hình Nuxt
-└── tailwind.config.js          # Cấu hình Tailwind</code></pre>
+│       ├── menus/                       # API endpoints cho menu
+│       └── system-notifications/        # API endpoints cho thông báo
+├── plugins/
+│   ├── supabase.client.ts               # Supabase client plugin
+│   └── suppress-warnings.client.ts      # Suppress warnings plugin
+├── lib/utils.ts                         # Utility functions
+├── nuxt.config.ts                       # Cấu hình Nuxt
+└── tailwind.config.js                   # Cấu hình Tailwind</code></pre>
           </div>
         </CardContent>
       </Card>
@@ -226,7 +391,7 @@
                   <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                   <div>
                     <h5 class="font-medium text-sm">Bảng chính</h5>
-                    <p class="text-xs text-muted-foreground">menus - quản lý menu hệ thống</p>
+                    <p class="text-xs text-muted-foreground">menus, system_notifications - quản lý menu và thông báo hệ thống</p>
                   </div>
                 </div>
                 <div class="flex items-start gap-2">
@@ -277,11 +442,145 @@
             <!-- API Endpoints -->
             <div>
               <h4 class="font-semibold mb-3">API Endpoints</h4>
-              <div class="bg-muted/50 p-4 rounded-lg">
-                <pre class="text-xs overflow-x-auto"><code>GET    /api/menus           # Lấy danh sách menu
+              <div class="space-y-4">
+                <div>
+                  <h5 class="font-medium text-sm mb-2">Menu Management:</h5>
+                  <div class="bg-muted/50 p-3 rounded-lg">
+                    <pre class="text-xs overflow-x-auto"><code>GET    /api/menus           # Lấy danh sách menu
 POST   /api/menus           # Tạo menu mới
+GET    /api/menus/[id]      # Lấy menu theo ID
 PUT    /api/menus/[id]      # Cập nhật menu
 DELETE /api/menus/[id]      # Xóa menu</code></pre>
+                  </div>
+                </div>
+                <div>
+                  <h5 class="font-medium text-sm mb-2">System Notifications:</h5>
+                  <div class="bg-muted/50 p-3 rounded-lg">
+                    <pre class="text-xs overflow-x-auto"><code>GET    /api/system-notifications           # Lấy danh sách thông báo
+POST   /api/system-notifications           # Tạo thông báo mới
+GET    /api/system-notifications/[id]      # Lấy thông báo theo ID
+PUT    /api/system-notifications/[id]      # Cập nhật thông báo
+DELETE /api/system-notifications/[id]      # Xóa thông báo</code></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <!-- System Notifications -->
+      <Card>
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2">
+            <Bell class="w-5 h-5" />
+            Quản lý Thông báo Hệ thống
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-6">
+            <!-- Notification Overview -->
+            <div>
+              <h4 class="font-semibold mb-3">Tổng quan thông báo</h4>
+              <p class="text-sm text-muted-foreground mb-4">
+                Hệ thống quản lý thông báo toàn diện với khả năng tạo, lên lịch và quản lý các thông báo hệ thống.
+              </p>
+            </div>
+
+            <!-- Notification Types -->
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="space-y-3">
+                <h4 class="font-semibold">Loại thông báo</h4>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2 p-2 bg-blue-50 dark:bg-blue-950/20 rounded">
+                    <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                    <span class="text-sm">Info - Thông tin</span>
+                  </div>
+                  <div class="flex items-center gap-2 p-2 bg-yellow-50 dark:bg-yellow-950/20 rounded">
+                    <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <span class="text-sm">Warning - Cảnh báo</span>
+                  </div>
+                  <div class="flex items-center gap-2 p-2 bg-red-50 dark:bg-red-950/20 rounded">
+                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <span class="text-sm">Error - Lỗi</span>
+                  </div>
+                  <div class="flex items-center gap-2 p-2 bg-green-50 dark:bg-green-950/20 rounded">
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span class="text-sm">Success - Thành công</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <h4 class="font-semibold">Trạng thái</h4>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2 p-2 bg-green-50 dark:bg-green-950/20 rounded">
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span class="text-sm">Active - Hoạt động</span>
+                  </div>
+                  <div class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-950/20 rounded">
+                    <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
+                    <span class="text-sm">Inactive - Tạm dừng</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notification Features -->
+            <div class="space-y-4">
+              <h4 class="font-semibold">Tính năng thông báo</h4>
+              <div class="grid gap-4 md:grid-cols-2">
+                <div class="space-y-2">
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">CRUD Operations</h5>
+                      <p class="text-xs text-muted-foreground">Tạo, đọc, cập nhật, xóa thông báo</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Date Scheduling</h5>
+                      <p class="text-xs text-muted-foreground">Lên lịch thông báo với start_at/end_at</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Filter & Search</h5>
+                      <p class="text-xs text-muted-foreground">Tìm kiếm theo tiêu đề, nội dung, loại, trạng thái</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Status Management</h5>
+                      <p class="text-xs text-muted-foreground">Quản lý trạng thái hoạt động</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Database Schema -->
+            <div class="space-y-4">
+              <h4 class="font-semibold">Database Schema</h4>
+              <div class="bg-muted/50 p-4 rounded-lg">
+                <pre class="text-xs overflow-x-auto"><code>CREATE TABLE system_notifications (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    type VARCHAR(50) DEFAULT 'info',
+    status VARCHAR(20) DEFAULT 'active',
+    created_by INTEGER,
+    start_at TIMESTAMP,
+    end_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
               </div>
             </div>
           </div>
@@ -437,6 +736,136 @@ DELETE /api/menus/[id]      # Xóa menu</code></pre>
         </CardContent>
       </Card>
 
+      <!-- Error Handling & Performance -->
+      <Card>
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2">
+            <Shield class="w-5 h-5" />
+            Error Handling & Performance
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-6">
+            <!-- Error Handling -->
+            <div>
+              <h4 class="font-semibold mb-3">Error Handling</h4>
+              <div class="grid gap-4 md:grid-cols-2">
+                <div class="space-y-2">
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">ErrorBoundary Component</h5>
+                      <p class="text-xs text-muted-foreground">Bắt và hiển thị lỗi gracefully</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">useErrorHandler Composable</h5>
+                      <p class="text-xs text-muted-foreground">Xử lý lỗi tập trung</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">API Error Handling</h5>
+                      <p class="text-xs text-muted-foreground">Xử lý lỗi API với try-catch</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Form Validation</h5>
+                      <p class="text-xs text-muted-foreground">Validation đầy đủ cho tất cả forms</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Performance Optimizations -->
+            <div>
+              <h4 class="font-semibold mb-3">Performance Optimizations</h4>
+              <div class="grid gap-4 md:grid-cols-2">
+                <div class="space-y-2">
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Lazy Loading</h5>
+                      <p class="text-xs text-muted-foreground">Sử dụng useLazyComponent cho components lớn</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Code Splitting</h5>
+                      <p class="text-xs text-muted-foreground">Tự động split code theo routes</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Caching</h5>
+                      <p class="text-xs text-muted-foreground">Cache API responses và static assets</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Bundle Optimization</h5>
+                      <p class="text-xs text-muted-foreground">Tối ưu bundle size</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Security Features -->
+            <div>
+              <h4 class="font-semibold mb-3">Security Features</h4>
+              <div class="grid gap-4 md:grid-cols-2">
+                <div class="space-y-2">
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Row Level Security</h5>
+                      <p class="text-xs text-muted-foreground">Bảo mật dữ liệu với Supabase RLS</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Input Validation</h5>
+                      <p class="text-xs text-muted-foreground">Validation tất cả inputs</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">XSS Protection</h5>
+                      <p class="text-xs text-muted-foreground">Bảo vệ khỏi XSS attacks</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <h5 class="font-medium text-sm">Environment Variables</h5>
+                      <p class="text-xs text-muted-foreground">Bảo mật sensitive data</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <!-- Contact Info -->
       <Card>
         <CardHeader>
@@ -476,7 +905,9 @@ import {
   BarChart3,
   Settings,
   Github,
-  Database
+  Database,
+  Bell,
+  Shield
 } from 'lucide-vue-next'
 
 // Import UI components
