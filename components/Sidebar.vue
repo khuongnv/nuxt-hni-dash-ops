@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import { 
   LayoutDashboard, 
@@ -38,7 +38,8 @@ import {
   Plus,
   Shield,
   Lock,
-  Key
+  Key,
+  User
 } from 'lucide-vue-next'
 import MenuItem from '~/components/ui/MenuItem.vue'
 
@@ -64,13 +65,15 @@ const iconMap: Record<string, any> = {
   Plus,
   Shield,
   Lock,
-  Key
+  Key,
+  User
 }
 
 // Load menus from API
 const loadMenus = async () => {
   try {
     const response = await $fetch('/api/menus')
+    
     if (response.success && response.data) {
       // Transform API data to navigation format
       const menus = response.data.filter((menu: any) => menu.is_active)
@@ -85,18 +88,21 @@ const loadMenus = async () => {
         '/main/about'
       ]
       
+      
       // Build navigation tree
       const buildNavigationTree = (menus: any[], parentId: number | null = null): any[] => {
-        return menus
+        const filtered = menus
           .filter(menu => menu.parent_id === parentId)
-          .filter(menu => validRoutes.includes(menu.href)) // Only include menus with valid routes
+          .filter(menu => !menu.href || menu.href === '#' || validRoutes.includes(menu.href)) // Include parent menus or valid routes
           .sort((a, b) => a.order - b.order)
-          .map(menu => ({
-            name: menu.name,
-            href: menu.href,
-            icon: iconMap[menu.icon] || Menu,
-            children: buildNavigationTree(menus, menu.id)
-          }))
+        
+        
+        return filtered.map(menu => ({
+          name: menu.name,
+          href: menu.href === '#' ? '#' : menu.href, // Use '#' for parent menus
+          icon: iconMap[menu.icon] || Menu,
+          children: buildNavigationTree(menus, menu.id)
+        }))
       }
       
       navigationItems.value = buildNavigationTree(menus)
@@ -157,10 +163,30 @@ const isSubmenuActive = (children: any[]) => {
   })
 }
 
-// Load menus on component mount
+// Load menus on component mount and when route changes
 onMounted(() => {
   loadMenus()
+  
+  // Listen for storage events to refresh menus when data changes
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'menus-updated') {
+      loadMenus()
+    }
+  })
 })
+
+// Watch for route changes to reload menus
+watch(() => route.path, () => {
+  loadMenus()
+}, { immediate: false })
+
+// Expose refresh method for external use
+const refreshMenus = () => {
+  loadMenus()
+}
+
+// Provide refresh method to child components
+provide('refreshSidebar', refreshMenus)
 </script>
 
 <style scoped>

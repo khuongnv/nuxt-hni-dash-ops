@@ -21,7 +21,8 @@
       
       <div class="flex items-center gap-2">
         <Input 
-          v-model="searchQuery" 
+          :value="searchQuery"
+          @input="searchQuery = $event.target.value"
           placeholder="Tìm kiếm menu..." 
           class="w-64"
         />
@@ -44,7 +45,7 @@
                 <TableHead class="w-12">#</TableHead>
                 <TableHead>Tên menu</TableHead>
                 <TableHead>Đường dẫn</TableHead>
-                <TableHead>Icon</TableHead>
+                <TableHead>Menu cha</TableHead>
                 <TableHead>Thứ tự</TableHead>
                 <TableHead>Cấp</TableHead>
                 <TableHead>Trạng thái</TableHead>
@@ -65,29 +66,108 @@
                   Không có menu nào
                 </TableCell>
               </TableRow>
-              <TableRow v-else v-for="menu in filteredMenus" :key="menu.id">
+              <TableRow v-else v-for="menu in filteredMenus" :key="menu.id" 
+                :class="{
+                  'bg-primary/5 border-l-4 border-l-primary': menu.level === 1,
+                  'bg-blue-50/50 border-l-4 border-l-blue-500': menu.level === 2,
+                  'bg-green-50/50 border-l-4 border-l-green-500': menu.level === 3,
+                  'bg-orange-50/50 border-l-4 border-l-orange-500': menu.level >= 4
+                }"
+              >
                 <TableCell class="font-medium">{{ menu.id }}</TableCell>
                 <TableCell>
                   <div class="flex items-center gap-2">
-                    <component 
-                      :is="getIconComponent(menu.icon)" 
-                      class="w-4 h-4 text-muted-foreground" 
-                    />
-                    <span :class="{ 'font-medium': menu.level === 1 }">
-                      {{ '  '.repeat(menu.level - 1) }}{{ menu.name }}
+                    <!-- Tree structure indicators -->
+                    <div class="flex items-center">
+                      <template v-for="i in menu.level - 1" :key="i">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <div v-if="i === menu.level - 1" class="w-3 h-3 flex items-center justify-center">
+                            <!-- Last level indicator -->
+                            <div class="w-4 h-4 border-l-2 border-b-2 border-muted-foreground/60 rounded-bl-sm"></div>
+                          </div>
+                          <div v-else class="w-3 h-3 flex items-center justify-center">
+                            <!-- Middle level indicator -->
+                            <div class="w-px h-3 bg-border"></div>
+                          </div>
+                        </div>
+                      </template>
+                    </div>
+                    
+                    <div :class="[
+                      'flex items-center justify-center rounded-md',
+                      menu.level === 1 ? 'w-8 h-8 bg-primary/10 border border-primary/20' : 
+                      menu.level === 2 ? 'w-6 h-6 bg-blue-50 border border-blue-200' :
+                      menu.level === 3 ? 'w-6 h-6 bg-green-50 border border-green-200' :
+                      'w-6 h-6 bg-orange-50 border border-orange-200'
+                    ]">
+                      <component 
+                        :is="getIconComponent(menu.icon)" 
+                        :class="[
+                          'w-4 h-4',
+                          menu.level === 1 ? 'text-primary' : 
+                          menu.level === 2 ? 'text-blue-600' : 
+                          menu.level === 3 ? 'text-green-600' : 'text-orange-600'
+                        ]" 
+                      />
+                    </div>
+                    
+                    <!-- Collapse/Expand button using ChevronRight -->
+                    <button 
+                      v-if="hasChildren(menu.id)"
+                      @click="toggleMenuCollapse(menu.id)"
+                      class="flex items-center justify-center w-4 h-4 rounded hover:bg-muted transition-colors cursor-pointer"
+                      :title="isMenuCollapsed(menu.id) ? 'Mở rộng' : 'Thu gọn'"
+                    >
+                      <ChevronRight 
+                        :class="[
+                          'w-3 h-3 transition-transform duration-200 text-muted-foreground',
+                          isMenuCollapsed(menu.id) ? 'rotate-0' : 'rotate-90'
+                        ]"
+                      />
+                    </button>
+                    <div v-else class="w-4 h-4"></div>
+                    
+                    <span :class="{ 
+                      'font-semibold text-foreground': menu.level === 1,
+                      'font-medium text-blue-700': menu.level === 2,
+                      'text-green-700': menu.level === 3,
+                      'text-orange-700': menu.level >= 4
+                    }">
+                      {{ menu.name }}
                     </span>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <code class="text-xs bg-muted px-1 rounded">{{ menu.href }}</code>
+                  <code class="text-xs bg-muted px-1 rounded">
+                    {{ menu.href === '#parent' ? '#' : menu.href }}
+                  </code>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline">{{ menu.icon }}</Badge>
+                  <span v-if="menu.parent_id" class="text-sm text-muted-foreground">
+                    {{ getParentName(menu.parent_id) }}
+                  </span>
+                  <span v-else class="text-sm text-muted-foreground">-</span>
                 </TableCell>
                 <TableCell>{{ menu.order }}</TableCell>
                 <TableCell>
-                  <Badge :variant="menu.level === 1 ? 'default' : 'secondary'">
-                    Cấp {{ menu.level }}
+                  <Badge :variant="
+                    menu.level === 1 ? 'secondary' : 
+                    menu.level === 2 ? 'secondary' : 
+                    menu.level === 3 ? 'outline' : 'secondary'
+                  " :class="{
+                    'bg-red-100 text-red-800 font-medium': menu.level === 1,
+                    'bg-blue-100 text-blue-800 font-medium': menu.level === 2,
+                    'bg-green-100 text-green-800 font-medium': menu.level === 3,
+                    'bg-orange-100 text-orange-800 font-medium': menu.level >= 4
+                  }">
+                    <span :class="{
+                      'text-red-800': menu.level === 1,
+                      'text-blue-800': menu.level === 2,
+                      'text-green-800': menu.level === 3,
+                      'text-orange-800': menu.level >= 4
+                    }">
+                      Cấp {{ menu.level }}
+                    </span>
                   </Badge>
                 </TableCell>
                 <TableCell>
@@ -134,56 +214,59 @@
           </CardDescription>
         </CardHeader>
         <CardContent>
+          
           <form @submit.prevent="submitForm" class="space-y-4">
             <div class="grid gap-4 md:grid-cols-2">
               <div class="space-y-2">
                 <Label for="name">Tên menu *</Label>
                 <Input 
                   id="name"
-                  v-model="form.name" 
+                  :value="form.name"
+                  @input="form.name = $event.target.value"
                   placeholder="Nhập tên menu"
                   required
                 />
               </div>
               
               <div class="space-y-2">
-                <Label for="href">Đường dẫn *</Label>
+                <Label for="href">Đường dẫn</Label>
                 <Input 
                   id="href"
-                  v-model="form.href" 
-                  placeholder="/path/to/page"
-                  required
+                  :value="form.href"
+                  @input="form.href = $event.target.value"
+                  placeholder="/path/to/page (dùng # cho menu cha)"
                 />
+                <p class="text-xs text-muted-foreground">
+                  Dùng "#" nếu menu này chỉ dùng để phân tầng (có menu con)
+                </p>
               </div>
             </div>
 
             <div class="grid gap-4 md:grid-cols-2">
               <div class="space-y-2">
                 <Label for="icon">Icon</Label>
-                <Select v-model="form.icon">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Chọn icon" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem 
-                      v-for="icon in availableIcons" 
-                      :key="icon" 
-                      :value="icon"
-                    >
-                      <div class="flex items-center gap-2">
-                        <component :is="getIconComponent(icon)" class="w-4 h-4" />
-                        {{ icon }}
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <select 
+                  id="icon"
+                  :value="form.icon"
+                  @change="form.icon = $event.target.value"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option 
+                    v-for="icon in availableIcons" 
+                    :key="icon" 
+                    :value="icon"
+                  >
+                    {{ icon }}
+                  </option>
+                </select>
               </div>
               
               <div class="space-y-2">
                 <Label for="order">Thứ tự</Label>
                 <Input 
                   id="order"
-                  v-model.number="form.order" 
+                  :value="form.order"
+                  @input="form.order = parseInt(($event.target as HTMLInputElement).value) || 1"
                   type="number"
                   min="1"
                   placeholder="1"
@@ -194,40 +277,36 @@
             <div class="grid gap-4 md:grid-cols-2">
               <div class="space-y-2">
                 <Label for="parent">Menu cha</Label>
-                <Select v-model="form.parent_id">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Chọn menu cha (tùy chọn)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem :value="null">Không có menu cha</SelectItem>
-                    <SelectItem 
-                      v-for="parent in parentMenus" 
-                      :key="parent.id" 
-                      :value="parent.id"
-                    >
-                      {{ '  '.repeat(parent.level - 1) }}{{ parent.name }}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <select 
+                  id="parent"
+                  :value="form.parent_id"
+                  @change="updateParentAndLevel(($event.target as HTMLSelectElement).value)"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option :value="null">Không có menu cha</option>
+                  <option 
+                    v-for="parent in parentMenus" 
+                    :key="parent.id" 
+                    :value="parent.id"
+                  >
+                    {{ '  '.repeat(parent.level - 1) }}{{ parent.name }}
+                  </option>
+                </select>
               </div>
               
               <div class="space-y-2">
-                <Label for="level">Cấp menu</Label>
-                <Input 
-                  id="level"
-                  v-model.number="form.level" 
-                  type="number"
-                  min="1"
-                  max="4"
-                  placeholder="1"
-                />
+                <Label>Cấp menu</Label>
+                <div class="flex h-10 w-full items-center rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
+                  {{ form.level }}
+                </div>
               </div>
             </div>
 
             <div class="flex items-center space-x-2">
               <input 
                 id="is_active"
-                v-model="form.is_active" 
+                :checked="form.is_active"
+                @change="form.is_active = ($event.target as HTMLInputElement).checked"
                 type="checkbox"
                 class="rounded"
               />
@@ -282,7 +361,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, inject } from 'vue'
 import { 
   Plus, 
   RefreshCw, 
@@ -319,185 +398,10 @@ import {
   Copy,
   Link,
   ExternalLink,
-  ArrowRight,
-  ArrowLeft,
-  ArrowUp,
-  ArrowDown,
-  ChevronRight,
-  ChevronLeft,
-  ChevronUp,
-  ChevronDown,
-  MoreHorizontal,
-  MoreVertical,
-  X,
-  Check,
-  AlertCircle,
-  AlertTriangle,
-  Info as InfoIcon,
-  HelpCircle,
-  Eye,
-  EyeOff,
-  Filter,
-  SortAsc,
-  SortDesc,
-  Grid,
-  List,
-  Maximize,
-  Minimize,
-  RotateCcw,
-  Save,
-  Trash,
-  Archive,
-  Bookmark,
-  Tag,
-  Folder,
-  File,
-  FolderOpen,
   Database,
   Server,
   Cloud,
-  Wifi,
-  WifiOff,
-  Signal,
-  Battery,
-  BatteryLow,
-  Volume2,
-  VolumeX,
-  Play,
-  Pause,
-  Stop,
-  SkipBack,
-  SkipForward,
-  Repeat,
-  Shuffle,
-  Mic,
-  MicOff,
-  Camera,
-  CameraOff,
-  Monitor,
-  Smartphone,
-  Tablet,
-  Laptop,
-  Desktop,
-  Printer,
-  Scanner,
-  HardDrive,
-  Cpu,
-  MemoryStick,
-  Mouse,
-  Keyboard,
-  Headphones,
-  Speaker,
-  Gamepad2,
-  Joystick,
-  Tv,
-  Radio,
-  Watch,
-  Thermometer,
-  Droplets,
-  Sun,
-  Moon,
-  CloudRain,
-  CloudSnow,
-  Wind,
-  Zap,
-  Flame,
-  Snowflake,
-  Umbrella,
-  TreePine,
-  TreeDeciduous,
-  Flower,
-  Leaf,
-  Bug,
-  Fish,
-  Bird,
-  Cat,
-  Dog,
-  Rabbit,
-  Turtle,
-  Whale,
-  Dolphin,
-  Shark,
-  Octopus,
-  Crab,
-  Lobster,
-  Butterfly,
-  Bee,
-  Ant,
-  Spider,
-  Snail,
-  Frog,
-  Lizard,
-  Snake,
-  Crocodile,
-  Elephant,
-  Giraffe,
-  Lion,
-  Tiger,
-  Bear,
-  Wolf,
-  Fox,
-  Deer,
-  Horse,
-  Cow,
-  Pig,
-  Sheep,
-  Goat,
-  Chicken,
-  Duck,
-  Goose,
-  Turkey,
-  Penguin,
-  Owl,
-  Eagle,
-  Hawk,
-  Parrot,
-  Peacock,
-  Swan,
-  Flamingo,
-  Toucan,
-  Hummingbird,
-  Woodpecker,
-  Robin,
-  Cardinal,
-  BlueJay,
-  Crow,
-  Raven,
-  Magpie,
-  Sparrow,
-  Canary,
-  Finch,
-  Goldfinch,
-  Wren,
-  Chickadee,
-  Nuthatch,
-  Titmouse,
-  Junco,
-  Towhee,
-  Grosbeak,
-  Tanager,
-  Warbler,
-  Vireo,
-  Kinglet,
-  Gnatcatcher,
-  Wrentit,
-  Bushtit,
-  Verdin,
-  Phainopepla,
-  SilkyFlycatcher,
-  Waxwing,
-  Shrike,
-  Vireo,
-  Warbler,
-  Kinglet,
-  Gnatcatcher,
-  Wrentit,
-  Bushtit,
-  Verdin,
-  Phainopepla,
-  SilkyFlycatcher,
-  Waxwing,
-  Shrike
+  ChevronRight
 } from 'lucide-vue-next'
 
 // Import UI components
@@ -528,8 +432,20 @@ useHead({
   title: 'Quản lý Menu - HNI Dashboard'
 })
 
+// Types
+interface Menu {
+  id: number
+  name: string
+  href: string
+  icon: string
+  order: number
+  parent_id: number | null
+  level: number
+  is_active: boolean
+}
+
 // Reactive data
-const menus = ref([])
+const menus = ref<Menu[]>([])
 const loading = ref(false)
 const submitting = ref(false)
 const deleting = ref(false)
@@ -537,10 +453,53 @@ const searchQuery = ref('')
 const showModal = ref(false)
 const showDeleteModal = ref(false)
 const isEditing = ref(false)
-const menuToDelete = ref(null)
+const menuToDelete = ref<Menu | null>(null)
+const collapsedMenus = ref<Set<number>>(new Set())
+
+// Inject sidebar refresh function
+const refreshSidebar = inject('refreshSidebar', () => {})
+
+// Helper function to trigger sidebar refresh
+const triggerSidebarRefresh = () => {
+  refreshSidebar()
+  // Trigger storage event for other tabs/windows
+  localStorage.setItem('menus-updated', Date.now().toString())
+}
+
+// Helper function to check if menu has children
+const hasChildren = (menuId: number): boolean => {
+  return menus.value.some(menu => menu.parent_id === menuId)
+}
+
+// Helper function to toggle menu collapse
+const toggleMenuCollapse = (menuId: number) => {
+  if (collapsedMenus.value.has(menuId)) {
+    collapsedMenus.value.delete(menuId)
+  } else {
+    collapsedMenus.value.add(menuId)
+  }
+}
+
+// Helper function to check if menu is collapsed
+const isMenuCollapsed = (menuId: number): boolean => {
+  return collapsedMenus.value.has(menuId)
+}
+
+// Helper function to check if any parent is collapsed
+const isAnyParentCollapsed = (menu: Menu): boolean => {
+  if (!menu.parent_id) return false
+  
+  const parent = menus.value.find(m => m.id === menu.parent_id)
+  if (!parent) return false
+  
+  if (isMenuCollapsed(parent.id)) return true
+  
+  return isAnyParentCollapsed(parent)
+}
 
 // Form data
-const form = ref({
+const form = ref<Partial<Menu> & { id: number | null }>({
+  id: null,
   name: '',
   href: '',
   icon: 'Menu',
@@ -559,6 +518,7 @@ const availableIcons = [
   'Share', 'Copy', 'Link', 'ExternalLink', 'Database', 'Server', 'Cloud'
 ]
 
+
 // Icon mapping
 const iconMap = {
   LayoutDashboard, Users, BarChart3, Settings, Menu, Info, Shield, Lock, Key,
@@ -567,13 +527,112 @@ const iconMap = {
   Share, Copy, Link, ExternalLink, Database, Server, Cloud
 }
 
+// Helper function to build tree structure
+const buildTreeStructure = (menus: Menu[]) => {
+  const result: Menu[] = []
+  const processed = new Set<number>()
+  
+  // First, add all level 1 menus (root menus)
+  const rootMenus = menus.filter(menu => menu.level === 1).sort((a, b) => a.order - b.order)
+  
+  const addMenuAndChildren = (menu: Menu) => {
+    if (processed.has(menu.id)) return
+    
+    // Only add menu if no parent is collapsed
+    if (!isAnyParentCollapsed(menu)) {
+      result.push(menu)
+      processed.add(menu.id)
+      
+      // Only add children if current menu is not collapsed
+      if (!isMenuCollapsed(menu.id)) {
+        const children = menus
+          .filter(child => child.parent_id === menu.id)
+          .sort((a, b) => a.order - b.order)
+        
+        children.forEach(child => addMenuAndChildren(child))
+      }
+    }
+  }
+  
+  // Process all root menus and their descendants
+  rootMenus.forEach(rootMenu => addMenuAndChildren(rootMenu))
+  
+  // Add any remaining menus that weren't processed (orphaned menus)
+  menus.forEach(menu => {
+    if (!processed.has(menu.id) && !isAnyParentCollapsed(menu)) {
+      result.push(menu)
+    }
+  })
+  
+  return result
+}
+
+// Helper function to remove Vietnamese diacritics
+const removeDiacritics = (str: string): string => {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+}
+
+// Helper function to get all parent menus
+const getAllParentMenus = (menu: Menu): Menu[] => {
+  const parents: Menu[] = []
+  let currentParent = menu.parent_id
+  
+  while (currentParent) {
+    const parent = menus.value.find(m => m.id === currentParent)
+    if (parent) {
+      parents.unshift(parent) // Add to beginning to maintain order
+      currentParent = parent.parent_id
+    } else {
+      break
+    }
+  }
+  
+  return parents
+}
+
 // Computed properties
 const filteredMenus = computed(() => {
-  if (!searchQuery.value) return menus.value
-  return menus.value.filter(menu => 
-    menu.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    menu.href.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
+  let result = menus.value
+  
+  // Apply search filter if needed
+  if (searchQuery.value) {
+    const searchTerm = searchQuery.value.toLowerCase()
+    const searchTermNoDiacritics = removeDiacritics(searchTerm)
+    
+    const matchingMenus = result.filter(menu => {
+      const menuName = menu.name.toLowerCase()
+      const menuNameNoDiacritics = removeDiacritics(menuName)
+      const menuHref = menu.href.toLowerCase()
+      const menuHrefNoDiacritics = removeDiacritics(menuHref)
+      
+      return menuName.includes(searchTerm) ||
+             menuNameNoDiacritics.includes(searchTermNoDiacritics) ||
+             menuHref.includes(searchTerm) ||
+             menuHrefNoDiacritics.includes(searchTermNoDiacritics)
+    })
+    
+    // Include all parent menus for matching menus
+    const allMenusToShow = new Set<number>()
+    
+    matchingMenus.forEach(menu => {
+      // Add the matching menu itself
+      allMenusToShow.add(menu.id)
+      
+      // Add all its parent menus
+      const parents = getAllParentMenus(menu)
+      parents.forEach(parent => allMenusToShow.add(parent.id))
+    })
+    
+    // Filter to only show menus that should be displayed
+    result = result.filter(menu => allMenusToShow.has(menu.id))
+  }
+  
+  // Build tree structure for proper hierarchy display
+  return buildTreeStructure(result)
 })
 
 const parentMenus = computed(() => {
@@ -583,6 +642,11 @@ const parentMenus = computed(() => {
 // Methods
 const getIconComponent = (iconName) => {
   return iconMap[iconName] || Menu
+}
+
+const getParentName = (parentId) => {
+  const parent = menus.value.find(m => m.id === parentId)
+  return parent ? parent.name : 'Không tìm thấy'
 }
 
 const loadMenus = async () => {
@@ -601,6 +665,7 @@ const loadMenus = async () => {
 
 const resetForm = () => {
   form.value = {
+    id: null,
     name: '',
     href: '',
     icon: 'Menu',
@@ -611,16 +676,43 @@ const resetForm = () => {
   }
 }
 
+const updateParentAndLevel = (parentId: string) => {
+  form.value.parent_id = parentId ? parseInt(parentId) : null
+  
+  if (parentId) {
+    const parent = menus.value.find(m => m.id === parseInt(parentId))
+    form.value.level = parent ? parent.level + 1 : 1
+  } else {
+    form.value.level = 1
+  }
+}
+
 const openCreateModal = () => {
   isEditing.value = false
   resetForm()
   showModal.value = true
 }
 
-const openEditModal = (menu) => {
+const openEditModal = (menu: Menu) => {
   isEditing.value = true
-  form.value = { ...menu }
   showModal.value = true
+  
+  // Assign values directly without resetForm to preserve data
+  form.value.id = menu.id
+  form.value.name = menu.name
+  form.value.href = menu.href
+  form.value.icon = menu.icon
+  form.value.order = menu.order
+  form.value.parent_id = menu.parent_id
+  form.value.is_active = menu.is_active
+  
+  // Calculate level based on parent
+  if (menu.parent_id) {
+    const parent = menus.value.find(m => m.id === menu.parent_id)
+    form.value.level = parent ? parent.level + 1 : 1
+  } else {
+    form.value.level = 1
+  }
 }
 
 const closeModal = () => {
@@ -634,24 +726,48 @@ const submitForm = async () => {
     
     if (isEditing.value) {
       // Update existing menu
+      const menuData = {
+        name: form.value.name,
+        href: form.value.href,
+        icon: form.value.icon,
+        order: form.value.order,
+        parent_id: form.value.parent_id,
+        level: form.value.level,
+        is_active: form.value.is_active
+      }
+      
+      
       const response = await $fetch(`/api/menus/${form.value.id}`, {
         method: 'PUT',
-        body: form.value
+        body: menuData
       })
       
       if (response.success) {
         await loadMenus()
+        triggerSidebarRefresh() // Refresh sidebar
         closeModal()
       }
     } else {
       // Create new menu
+      const menuData = {
+        name: form.value.name,
+        href: form.value.href,
+        icon: form.value.icon,
+        order: form.value.order,
+        parent_id: form.value.parent_id,
+        level: form.value.level,
+        is_active: form.value.is_active
+      }
+      
+      
       const response = await $fetch('/api/menus', {
         method: 'POST',
-        body: form.value
+        body: menuData
       })
       
       if (response.success) {
         await loadMenus()
+        triggerSidebarRefresh() // Refresh sidebar
         closeModal()
       }
     }
@@ -662,7 +778,7 @@ const submitForm = async () => {
   }
 }
 
-const confirmDelete = (menu) => {
+const confirmDelete = (menu: Menu) => {
   menuToDelete.value = menu
   showDeleteModal.value = true
 }
@@ -683,6 +799,7 @@ const deleteMenu = async () => {
     
     if (response.success) {
       await loadMenus()
+      triggerSidebarRefresh() // Refresh sidebar
       closeDeleteModal()
     }
   } catch (error) {
@@ -695,5 +812,8 @@ const deleteMenu = async () => {
 // Lifecycle
 onMounted(() => {
   loadMenus()
+  
+  // Force refresh sidebar when page loads
+  refreshSidebar()
 })
 </script>

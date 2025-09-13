@@ -13,10 +13,10 @@ export default defineEventHandler(async (event) => {
     }
 
     // Validate required fields
-    if (!body.name || !body.href || !body.icon) {
+    if (!body.name || !body.icon) {
       throw createError({
         statusCode: 400,
-        statusMessage: 'Thiếu thông tin bắt buộc: name, href, icon'
+        statusMessage: 'Thiếu thông tin bắt buộc: name, icon'
       })
     }
 
@@ -29,14 +29,15 @@ export default defineEventHandler(async (event) => {
 
     const updateData = {
       name: body.name.trim(),
-      href: body.href.trim(),
+      href: body.href ? body.href.trim() : '#',
       icon: body.icon.trim(),
       order: body.order || 1,
-      is_active: body.isActive !== undefined ? body.isActive : true,
-      parent_id: body.parentId || null,
+      is_active: body.is_active !== undefined ? body.is_active : true,
+      parent_id: body.parent_id || null,
       level: body.level || 1,
       updated_at: new Date().toISOString()
     }
+    
 
     const { data, error } = await supabase
       .from('menus')

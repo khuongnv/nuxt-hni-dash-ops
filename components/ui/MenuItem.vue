@@ -7,10 +7,18 @@
         :aria-expanded="openSubmenus.includes(item.name)"
         :aria-controls="`submenu-${item.name}`"
         :aria-label="collapsed ? item.name : undefined"
-        class="flex items-center w-full rounded-lg text-sm font-medium transition-all duration-200 relative group focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
         :class="[
-          collapsed ? 'px-2 py-2 justify-center' : 'px-3 py-2',
-          level === 0 ? 'space-x-3' : '',
+          'flex items-center w-full rounded-lg font-medium transition-all duration-200 relative group focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 gap-3',
+          level === 0 ? 'text-sm min-h-[2.5rem]' : 
+          level === 1 ? 'text-sm min-h-[2.25rem]' : 
+          level === 2 ? 'text-xs min-h-[2rem]' : 
+          'text-xs min-h-[1.75rem]',
+          collapsed ? 'px-2 py-2 justify-center' : 
+          level === 0 ? 'px-3 py-2' : 
+          level === 1 ? 'px-3 py-1.5' : 
+          level === 2 ? 'px-2 py-1' : 
+          'px-2 py-1',
+          level === 0 ? '' : '',
           isActive(item.href)
             ? level === 0 ? 'bg-primary text-primary-foreground' : 'bg-primary/20 text-primary'
             : isSubmenuActive(item.children)
@@ -18,15 +26,27 @@
               : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
         ]"
       >
-        <component :is="item.icon" :class="[level === 0 ? 'h-5 w-5' : 'h-4 w-4', 'flex-shrink-0']" />
+        <component :is="item.icon" :class="[
+          level === 0 ? 'h-5 w-5' : 
+          level === 1 ? 'h-4 w-4' : 
+          level === 2 ? 'h-3.5 w-3.5' : 
+          'h-3 w-3', 
+          'flex-shrink-0', 'self-center'
+        ]" />
         <Transition name="fade" mode="out-in">
-          <span v-if="!collapsed" class="whitespace-nowrap flex-1 text-left">{{ item.name }}</span>
+          <span v-if="!collapsed" class="whitespace-nowrap flex-1 text-left leading-none self-center">{{ item.name }}</span>
         </Transition>
         <Transition name="fade" mode="out-in">
           <ChevronDown 
             v-if="!collapsed" 
-            class="h-4 w-4 transition-transform duration-200"
-            :class="{ 'rotate-180': openSubmenus.includes(item.name) }"
+            :class="[
+              level === 0 ? 'h-4 w-4' : 
+              level === 1 ? 'h-3.5 w-3.5' : 
+              level === 2 ? 'h-3 w-3' : 
+              'h-2.5 w-2.5',
+              'transition-transform duration-200 self-center flex-shrink-0',
+              { 'rotate-180': openSubmenus.includes(item.name) }
+            ]"
           />
         </Transition>
         
@@ -46,7 +66,7 @@
           :id="`submenu-${item.name}`"
           role="menu"
           :aria-label="`${item.name} submenu`"
-          :class="collapsed ? 'mt-1 space-y-1' : 'ml-6 mt-1 space-y-1'"
+          :class="collapsed ? 'mt-1 space-y-1' : `ml-${6 + level * 2} mt-1 space-y-1 border-l border-border/20 pl-2`"
         >
           <MenuItem
             v-for="subItem in item.children"
@@ -69,18 +89,32 @@
         :to="item.href"
         :aria-label="collapsed ? item.name : undefined"
         :aria-current="isActive(item.href) ? 'page' : undefined"
-        class="flex items-center w-full rounded-lg text-sm font-medium transition-all duration-200 relative group focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
         :class="[
-          collapsed ? 'px-2 py-2 justify-center' : 'px-3 py-2',
-          level === 0 ? 'space-x-3' : '',
+          'flex items-center w-full rounded-lg font-medium transition-all duration-200 relative group focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 gap-3',
+          level === 0 ? 'text-sm min-h-[2.5rem]' : 
+          level === 1 ? 'text-sm min-h-[2.25rem]' : 
+          level === 2 ? 'text-xs min-h-[2rem]' : 
+          'text-xs min-h-[1.75rem]',
+          collapsed ? 'px-2 py-2 justify-center' : 
+          level === 0 ? 'px-3 py-2' : 
+          level === 1 ? 'px-3 py-1.5' : 
+          level === 2 ? 'px-2 py-1' : 
+          'px-2 py-1',
+          level === 0 ? '' : '',
           isActive(item.href)
             ? level === 0 ? 'bg-primary text-primary-foreground' : 'bg-primary/20 text-primary'
             : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
         ]"
       >
-        <component :is="item.icon" :class="[level === 0 ? 'h-5 w-5' : 'h-4 w-4', 'flex-shrink-0', collapsed ? '' : 'mr-3']" />
+        <component :is="item.icon" :class="[
+          level === 0 ? 'h-5 w-5' : 
+          level === 1 ? 'h-4 w-4' : 
+          level === 2 ? 'h-3.5 w-3.5' : 
+          'h-3 w-3', 
+          'flex-shrink-0', 'self-center'
+        ]" />
         <Transition name="fade" mode="out-in">
-          <span v-if="!collapsed" class="whitespace-nowrap flex-1 text-left">{{ item.name }}</span>
+          <span v-if="!collapsed" class="whitespace-nowrap flex-1 text-left leading-none self-center">{{ item.name }}</span>
         </Transition>
         
         <!-- Tooltip for collapsed state -->
