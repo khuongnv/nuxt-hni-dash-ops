@@ -1,6 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { 
+    enabled: true,
+    timeline: {
+      enabled: false
+    }
+  },
+  compatibilityDate: '2025-01-13',
   
   // Modules
   modules: [
@@ -12,7 +18,9 @@ export default defineNuxtConfig({
   // Performance optimizations
   experimental: {
     payloadExtraction: false,
-    inlineSSRStyles: false
+    inlineSSRStyles: false,
+    viewTransition: true,
+    componentIslands: false
   },
 
   // Build optimizations
@@ -78,6 +86,30 @@ export default defineNuxtConfig({
           }
         }
       }
-    }
+    },
+    logLevel: 'warn'
+  },
+
+  // Suppress warnings
+  typescript: {
+    strict: false,
+    typeCheck: false
+  },
+
+  // Vue configuration
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag.includes('-')
+    },
+    runtimeCompiler: false
+  },
+
+  // SSR configuration
+  ssr: true,
+  
+  // Sourcemap configuration
+  sourcemap: {
+    server: false,
+    client: false
   }
 })

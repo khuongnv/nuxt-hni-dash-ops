@@ -1,5 +1,12 @@
 export const useSupabase = () => {
   const { $supabase } = useNuxtApp()
+  const { handleError } = useErrorHandler()
+  
+  if (!$supabase) {
+    handleError('Supabase client not initialized. Please check your environment variables.', 'useSupabase')
+    return null
+  }
+  
   return $supabase
 }
 
@@ -9,25 +16,51 @@ export const useMenus = () => {
 
   // Lấy tất cả menus
   const getMenus = async () => {
-    const { data, error } = await supabase
-      .from('menus')
-      .select('*')
-      .order('order', { ascending: true })
+    if (!supabase) {
+      console.error('Supabase client not available')
+      return []
+    }
     
-    if (error) throw error
-    return data
+    try {
+      const { data, error } = await supabase
+        .from('menus')
+        .select('*')
+        .order('order', { ascending: true })
+      
+      if (error) {
+        console.error('Error fetching menus:', error)
+        return []
+      }
+      return data || []
+    } catch (err) {
+      console.error('Unexpected error fetching menus:', err)
+      return []
+    }
   }
 
   // Lấy menu theo ID
   const getMenuById = async (id: number) => {
-    const { data, error } = await supabase
-      .from('menus')
-      .select('*')
-      .eq('id', id)
-      .single()
+    if (!supabase) {
+      console.error('Supabase client not available')
+      return null
+    }
     
-    if (error) throw error
-    return data
+    try {
+      const { data, error } = await supabase
+        .from('menus')
+        .select('*')
+        .eq('id', id)
+        .single()
+      
+      if (error) {
+        console.error('Error fetching menu by ID:', error)
+        return null
+      }
+      return data
+    } catch (err) {
+      console.error('Unexpected error fetching menu by ID:', err)
+      return null
+    }
   }
 
   // Tạo menu mới

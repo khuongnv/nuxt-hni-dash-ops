@@ -367,40 +367,6 @@ import {
   RefreshCw, 
   Edit, 
   Trash2,
-  LayoutDashboard,
-  Users,
-  BarChart3,
-  Settings,
-  Menu,
-  Info,
-  Shield,
-  Lock,
-  Key,
-  FileText,
-  Home,
-  Search,
-  Bell,
-  User,
-  Mail,
-  Phone,
-  Calendar,
-  Clock,
-  Star,
-  Heart,
-  ThumbsUp,
-  MessageSquare,
-  Image,
-  Video,
-  Music,
-  Download,
-  Upload,
-  Share,
-  Copy,
-  Link,
-  ExternalLink,
-  Database,
-  Server,
-  Cloud,
   ChevronRight
 } from 'lucide-vue-next'
 
@@ -509,23 +475,8 @@ const form = ref<Partial<Menu> & { id: number | null }>({
   is_active: true
 })
 
-// Available icons
-const availableIcons = [
-  'LayoutDashboard', 'Users', 'BarChart3', 'Settings', 'Menu', 'Info',
-  'Shield', 'Lock', 'Key', 'FileText', 'Home', 'Search', 'Bell', 'User',
-  'Mail', 'Phone', 'Calendar', 'Clock', 'Star', 'Heart', 'ThumbsUp',
-  'MessageSquare', 'Image', 'Video', 'Music', 'Download', 'Upload',
-  'Share', 'Copy', 'Link', 'ExternalLink', 'Database', 'Server', 'Cloud'
-]
-
-
-// Icon mapping
-const iconMap = {
-  LayoutDashboard, Users, BarChart3, Settings, Menu, Info, Shield, Lock, Key,
-  FileText, Home, Search, Bell, User, Mail, Phone, Calendar, Clock, Star,
-  Heart, ThumbsUp, MessageSquare, Image, Video, Music, Download, Upload,
-  Share, Copy, Link, ExternalLink, Database, Server, Cloud
-}
+// Use icons composable
+const { availableIcons, getIconComponent } = useIcons()
 
 // Helper function to build tree structure
 const buildTreeStructure = (menus: Menu[]) => {
@@ -640,9 +591,6 @@ const parentMenus = computed(() => {
 })
 
 // Methods
-const getIconComponent = (iconName) => {
-  return iconMap[iconName] || Menu
-}
 
 const getParentName = (parentId) => {
   const parent = menus.value.find(m => m.id === parentId)

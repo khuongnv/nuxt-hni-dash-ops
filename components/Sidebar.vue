@@ -28,19 +28,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, provide } from 'vue'
 import { useRoute } from 'vue-router'
-import { 
-  LayoutDashboard, 
-  Users, 
-  BarChart3, 
-  Settings, 
-  Menu, 
-  Info,
-  Plus,
-  Shield,
-  Lock,
-  Key,
-  User
-} from 'lucide-vue-next'
+import { Menu } from 'lucide-vue-next'
 import MenuItem from '~/components/ui/MenuItem.vue'
 
 // Props
@@ -51,23 +39,11 @@ const props = defineProps<{
 // Route
 const route = useRoute()
 
+// Use icons composable
+const { iconMap, getIconComponent } = useIcons()
+
 // Navigation items - sử dụng dữ liệu từ API Supabase
 const navigationItems = ref([])
-
-// Icon mapping
-const iconMap: Record<string, any> = {
-  LayoutDashboard,
-  Users,
-  BarChart3,
-  Settings,
-  Menu,
-  Info,
-  Plus,
-  Shield,
-  Lock,
-  Key,
-  User
-}
 
 // Load menus from API
 const loadMenus = async () => {
@@ -78,29 +54,19 @@ const loadMenus = async () => {
       // Transform API data to navigation format
       const menus = response.data.filter((menu: any) => menu.is_active)
       
-      // List of valid routes that have corresponding files
-      const validRoutes = [
-        '/main/dashboard',
-        '/admin/users',
-        '/admin/menus',
-        '/system/settings',
-        '/system/reports',
-        '/main/about'
-      ]
-      
-      
       // Build navigation tree
+      // Hiển thị tất cả menu (kể cả path sai) vì đã có xử lý 404.vue
       const buildNavigationTree = (menus: any[], parentId: number | null = null): any[] => {
         const filtered = menus
           .filter(menu => menu.parent_id === parentId)
-          .filter(menu => !menu.href || menu.href === '#' || validRoutes.includes(menu.href)) // Include parent menus or valid routes
+          .filter(menu => !menu.href || menu.href === '#' || menu.href.startsWith('/')) // Include parent menus or any valid path
           .sort((a, b) => a.order - b.order)
         
         
         return filtered.map(menu => ({
           name: menu.name,
-          href: menu.href === '#' ? '#' : menu.href, // Use '#' for parent menus
-          icon: iconMap[menu.icon] || Menu,
+          href: menu.href === '#' ? '#' : (menu.href || '#'), // Use '#' for parent menus or empty href
+          icon: getIconComponent(menu.icon),
           children: buildNavigationTree(menus, menu.id)
         }))
       }
@@ -114,22 +80,22 @@ const loadMenus = async () => {
       {
         name: 'Dashboard',
         href: '/main/dashboard',
-        icon: LayoutDashboard
+        icon: getIconComponent('LayoutDashboard')
       },
       {
         name: 'Người dùng',
         href: '/admin/users',
-        icon: Users
+        icon: getIconComponent('Users')
       },
       {
         name: 'Quản lý Menu',
         href: '/admin/menus',
-        icon: Menu
+        icon: getIconComponent('Menu')
       },
       {
         name: 'Hệ thống',
         href: '/system/settings',
-        icon: Settings
+        icon: getIconComponent('Settings')
       }
     ]
   }

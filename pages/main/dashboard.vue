@@ -1,5 +1,6 @@
 <template>
-  <div class="h-full flex flex-col space-y-6">
+  <ErrorBoundary>
+    <div class="h-full flex flex-col space-y-6">
     <!-- Page Header -->
     <PageHeader 
       title="Dashboard"
@@ -192,7 +193,8 @@
         </div>
       </CardContent>
     </Card>
-  </div>
+    </div>
+  </ErrorBoundary>
 </template>
 
 <script setup lang="ts">
@@ -211,6 +213,7 @@ import CardHeader from '~/components/ui/CardHeader.vue'
 import CardTitle from '~/components/ui/CardTitle.vue'
 import CardContent from '~/components/ui/CardContent.vue'
 import Button from '~/components/ui/Button.vue'
+import ErrorBoundary from '~/components/ErrorBoundary.vue'
 
 
 // Set page title

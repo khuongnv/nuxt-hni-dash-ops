@@ -34,3 +34,9 @@ Khi deploy lên Vercel, thêm environment variables trong Vercel Dashboard:
 - File `.env` không được commit vào git (đã có trong .gitignore)
 - Environment variables trên Vercel phải khớp với tên trong nuxt.config.ts
 - Không sử dụng service_role key cho client-side
+
+
+
+# Supabase Configuration
+SUPABASE_URL=https://tpqraghvxywsoaxmfcfs.supabase.co
+SUPABASE_API_KEY=sb_secret_xc-edfngrUhDEYjYfqTDyQ_-RJGwlKP

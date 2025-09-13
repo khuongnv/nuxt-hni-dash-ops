@@ -2,6 +2,7 @@
   <button
     :class="cn(buttonVariants({ variant, size }), $attrs.class)"
     v-bind="$attrs"
+    @click="$emit('click', $event)"
   >
     <slot />
   </button>
@@ -46,4 +47,7 @@ export interface ButtonProps {
 }
 
 defineProps<ButtonProps>()
+defineEmits<{
+  click: [event: MouseEvent]
+}>()
 </script>
