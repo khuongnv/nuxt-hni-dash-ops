@@ -79,6 +79,7 @@ const loadMenus = async () => {
       const validRoutes = [
         '/main/dashboard',
         '/admin/users',
+        '/admin/menus',
         '/system/settings',
         '/system/reports',
         '/main/about'
@@ -113,6 +114,11 @@ const loadMenus = async () => {
         name: 'Người dùng',
         href: '/admin/users',
         icon: Users
+      },
+      {
+        name: 'Quản lý Menu',
+        href: '/admin/menus',
+        icon: Menu
       },
       {
         name: 'Hệ thống',
