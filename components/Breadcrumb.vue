@@ -58,10 +58,20 @@ const breadcrumbs = computed(() => {
     'system': 'Hệ thống',
     'dashboard': 'Dashboard',
     'users': 'Người dùng',
-    'reports': 'Báo cáo',
-    'settings': 'Cài đặt',
-    'menu-management': 'Quản lý Menu',
-    'about': 'Giới thiệu'
+    'reports': 'Báo cáo & Thống kê',
+    'settings': 'Cài đặt hệ thống',
+    'menu-management': 'Quản lý Menu hệ thống',
+    'about': 'Giới thiệu',
+    'list': 'Danh sách',
+    'add': 'Thêm mới',
+    'roles': 'Phân quyền',
+    'revenue': 'Báo cáo doanh thu',
+    'general': 'Cấu hình chung',
+    'security': 'Bảo mật',
+    'password': 'Đổi mật khẩu',
+    '2fa': 'Xác thực 2 yếu tố',
+    'admin-role': 'Quyền quản trị',
+    'user-role': 'Quyền người dùng'
   }
   
   let currentPath = ''
@@ -69,16 +79,41 @@ const breadcrumbs = computed(() => {
     currentPath += `/${segment}`
     
     // Use Vietnamese name if available, otherwise convert to readable name
-    const name = pageNames[segment] || segment
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
+    let name = pageNames[segment]
+    
+    if (!name) {
+      // Handle special cases
+      if (segment === 'index' || segment === '') {
+        return // Skip index segments
+      }
+      
+      // Convert kebab-case to readable name
+      name = segment
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+    }
+    
+    // Skip adding if it's the same as previous item (for nested routes)
+    if (breadcrumbItems.length > 0 && breadcrumbItems[breadcrumbItems.length - 1].name === name) {
+      return
+    }
     
     breadcrumbItems.push({
       name,
       path: currentPath
     })
   })
+  
+  // Special handling for specific routes
+  if (route.path === '/main/dashboard') {
+    return [] // Dashboard doesn't need breadcrumb
+  }
+  
+  // Remove "Trang chính" from breadcrumb if it's the first item and we're in main section
+  if (breadcrumbItems.length > 0 && breadcrumbItems[0].name === 'Trang chính') {
+    breadcrumbItems.shift()
+  }
   
   return breadcrumbItems
 })
