@@ -12,7 +12,20 @@ const props = defineProps<Props>()
 
 // Function to remove Vietnamese diacritics
 const removeDiacritics = (str: string) => {
-  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  // First normalize and remove combining diacritical marks
+  let result = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  
+  // Handle special Vietnamese characters
+  result = result
+    .replace(/[đĐ]/g, 'd')  // đ/Đ → d
+    .replace(/[ăĂ]/g, 'a')  // ă/Ă → a  
+    .replace(/[âÂ]/g, 'a')  // â/Â → a
+    .replace(/[êÊ]/g, 'e')  // ê/Ê → e
+    .replace(/[ôÔ]/g, 'o')  // ô/Ô → o
+    .replace(/[ơƠ]/g, 'o')  // ơ/Ơ → o
+    .replace(/[ưƯ]/g, 'u')  // ư/Ư → u
+  
+  return result
 }
 
 const highlightedText = computed(() => {
