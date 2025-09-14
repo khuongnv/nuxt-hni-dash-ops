@@ -98,6 +98,7 @@ const appVersion = ref('')
 
 // Search functionality
 const searchQuery = ref('')
+const debouncedSearchQuery = ref('')
 
 // Navigation items - sử dụng dữ liệu từ API Supabase
 const navigationItems = ref([])
@@ -121,8 +122,8 @@ const filteredNavigationItems = computed(() => {
   }
   
   // Filter by search query
-  if (searchQuery.value.trim()) {
-    const query = searchQuery.value.toLowerCase().trim()
+  if (debouncedSearchQuery.value.trim()) {
+    const query = debouncedSearchQuery.value.toLowerCase().trim()
     items = items.map(item => {
       // If main item matches, return it with all children
       if (item.name.toLowerCase().includes(query)) {
@@ -282,12 +283,25 @@ provide('refreshSidebar', refreshMenus)
 // Clear search function
 const clearSearch = () => {
   searchQuery.value = ''
+  debouncedSearchQuery.value = ''
   // Close all submenus when clearing search
   openSubmenus.value = []
 }
 
-// Auto-open submenus when searching
+// Debounce search query for better performance
+let searchTimeout: NodeJS.Timeout | null = null
 watch(searchQuery, (newQuery) => {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+  }
+  
+  searchTimeout = setTimeout(() => {
+    debouncedSearchQuery.value = newQuery
+  }, 150) // 150ms debounce
+})
+
+// Auto-open submenus when searching
+watch(debouncedSearchQuery, (newQuery) => {
   if (newQuery.trim()) {
     // Auto-open all submenus when searching
     const allSubmenuNames = navigationItems.value
