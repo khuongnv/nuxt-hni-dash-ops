@@ -1,6 +1,6 @@
 <template>
   <aside 
-    class="fixed inset-y-0 left-0 z-50 bg-card border-r border-border transition-all duration-300 ease-in-out lg:translate-x-0"
+    class="fixed inset-y-0 left-0 z-50 bg-card border-r border-border transition-all duration-300 ease-in-out lg:translate-x-0 flex flex-col"
     :class="collapsed ? 'w-16' : 'w-64'"
   >
     <!-- Logo -->
@@ -24,7 +24,7 @@
     </nav>
 
     <!-- Footer -->
-    <div class="border-t border-border p-4">
+    <div class="border-t border-border p-4 mt-auto">
       <div v-if="!collapsed" class="text-center space-y-2">
         <!-- App Name -->
         <div class="text-xs font-medium text-foreground">
