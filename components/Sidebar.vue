@@ -25,46 +25,15 @@
 
     <!-- Footer -->
     <div class="border-t border-border p-4">
-      <div v-if="!collapsed" class="space-y-3">
-        <!-- App Info -->
-        <div class="text-center">
-          <div class="text-xs font-medium text-foreground mb-1">
-            HNI Dashboard
-          </div>
-          <div class="text-xs text-muted-foreground">
-            v1.0.0
-          </div>
+      <div v-if="!collapsed" class="text-center space-y-2">
+        <!-- App Name -->
+        <div class="text-xs font-medium text-foreground">
+          HniDashOps
         </div>
         
-        <!-- User Status -->
-        <div v-if="isAuthenticated" class="text-center">
-          <div class="flex items-center justify-center gap-1 mb-1">
-            <div class="w-2 h-2 rounded-full bg-green-500"></div>
-            <div class="text-xs text-muted-foreground">
-              Đã đăng nhập
-            </div>
-          </div>
-          <div class="text-xs text-muted-foreground">
-            {{ getCurrentUser()?.userName || 'User' }}
-          </div>
-        </div>
-        <div v-else class="text-center">
-          <div class="flex items-center justify-center gap-1 mb-1">
-            <div class="w-2 h-2 rounded-full bg-gray-400"></div>
-            <div class="text-xs text-muted-foreground">
-              Chế độ xem công khai
-            </div>
-          </div>
-          <div class="text-xs text-muted-foreground">
-            Chỉ xem Dashboard & About
-          </div>
-        </div>
-        
-        <!-- Environment Info -->
-        <div class="text-center">
-          <div class="text-xs text-muted-foreground">
-            {{ getEnvironmentInfo() }}
-          </div>
+        <!-- Copyright -->
+        <div class="text-xs text-muted-foreground">
+          © 2025 khuongnv
         </div>
       </div>
       
@@ -94,7 +63,7 @@ const props = defineProps<{
 const route = useRoute()
 
 // Auth
-const { isAuthenticated, isInitialized, getCurrentUser } = useAuth()
+const { isAuthenticated, isInitialized } = useAuth()
 
 // Use icons composable
 const { iconMap, getIconComponent } = useIcons()
@@ -230,21 +199,6 @@ const refreshMenus = () => {
 
 // Provide refresh method to child components
 provide('refreshSidebar', refreshMenus)
-
-// Helper function to get environment info
-const getEnvironmentInfo = () => {
-  if (process.client) {
-    const hostname = window.location.hostname
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'Development'
-    } else if (hostname.includes('vercel.app')) {
-      return 'Production'
-    } else {
-      return 'Staging'
-    }
-  }
-  return 'Development'
-}
 </script>
 
 <style scoped>
