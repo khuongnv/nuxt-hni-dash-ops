@@ -136,10 +136,8 @@ const filteredNavigationItems = computed(() => {
       const normalizedText = removeDiacritics(text).toLowerCase()
       const normalizedQuery = removeDiacritics(searchQuery).toLowerCase()
       
-      // Check both directions: query without diacritics vs text, and query vs text without diacritics
-      return normalizedText.includes(normalizedQuery) || 
-             removeDiacritics(text).toLowerCase().includes(searchQuery.toLowerCase()) ||
-             text.toLowerCase().includes(normalizedQuery)
+      // Simple check: if normalized text contains normalized query
+      return normalizedText.includes(normalizedQuery)
     }
     
     items = items.map(item => {
@@ -209,6 +207,10 @@ const loadMenus = async () => {
       }
       
       navigationItems.value = buildNavigationTree(menus)
+      
+      // Debug: log menu data
+      console.log('Menu data from API:', menus)
+      console.log('Final navigation items:', navigationItems.value)
     }
   } catch (error) {
     console.error('Error loading menus:', error)
@@ -228,6 +230,11 @@ const loadMenus = async () => {
         name: 'Quản lý Menu',
         href: '/admin/menus',
         icon: getIconComponent('Menu')
+      },
+      {
+        name: 'Đơn vị',
+        href: '/admin/departments',
+        icon: getIconComponent('Building')
       },
       {
         name: 'Hệ thống',
