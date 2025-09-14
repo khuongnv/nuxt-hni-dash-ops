@@ -125,9 +125,22 @@ const filteredNavigationItems = computed(() => {
   // Filter by search query
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase().trim()
+    
+    // Function to remove Vietnamese diacritics
+    const removeDiacritics = (str: string) => {
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    }
+    
+    // Function to check if text matches query (case-insensitive, no diacritics)
+    const matchesQuery = (text: string, searchQuery: string) => {
+      const normalizedText = removeDiacritics(text).toLowerCase()
+      const normalizedQuery = removeDiacritics(searchQuery).toLowerCase()
+      return normalizedText.includes(normalizedQuery)
+    }
+    
     items = items.map(item => {
       // If main item matches, return it with all children
-      if (item.name.toLowerCase().includes(query)) {
+      if (matchesQuery(item.name, query)) {
         return item
       }
       
@@ -135,14 +148,14 @@ const filteredNavigationItems = computed(() => {
       if (item.children) {
         const filteredChildren = item.children.filter(child => {
           // Check if child matches
-          if (child.name.toLowerCase().includes(query)) {
+          if (matchesQuery(child.name, query)) {
             return true
           }
           
           // Check grand children
           if (child.children) {
             return child.children.some(grandChild => 
-              grandChild.name.toLowerCase().includes(query)
+              matchesQuery(grandChild.name, query)
             )
           }
           
