@@ -3,8 +3,21 @@
     class="fixed inset-y-0 left-0 z-50 bg-card border-r border-border transition-all duration-300 ease-in-out lg:translate-x-0 flex flex-col"
     :class="collapsed ? 'w-16' : 'w-64'"
   >
+    <!-- Logo -->
+    <div class="flex h-16 items-center justify-center border-b border-border">
+      <div v-if="!collapsed" class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+          <span class="text-primary-foreground font-bold text-sm">H</span>
+        </div>
+        <span class="font-semibold text-foreground">HniDashOps</span>
+      </div>
+      <div v-else class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+        <span class="text-primary-foreground font-bold text-sm">H</span>
+      </div>
+    </div>
+
     <!-- Search Bar -->
-    <div v-if="!collapsed" class="px-4 pt-4 pb-1">
+    <div v-if="!collapsed" class="px-4 pt-3 pb-1">
       <div class="relative">
         <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
