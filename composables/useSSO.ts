@@ -51,10 +51,17 @@ export const useSSO = () => {
       })
       
       // 2. Check SSO response
-      if (ssoResponse.IsError) {
+      if (!ssoResponse || ssoResponse.IsError) {
         return {
           success: false,
-          error: ssoResponse.ErrorMessage || 'SSO validation failed'
+          error: ssoResponse?.ErrorMessage || 'SSO validation failed'
+        }
+      }
+      
+      if (!ssoResponse.Data) {
+        return {
+          success: false,
+          error: 'SSO response data is missing'
         }
       }
       
@@ -68,10 +75,10 @@ export const useSSO = () => {
         }
       })
       
-      if (!userResponse.success) {
+      if (!userResponse || !userResponse.success) {
         return {
           success: false,
-          error: userResponse.error || 'User not found in database',
+          error: userResponse?.error || 'User not found in database',
           ssoUser
         }
       }
@@ -96,7 +103,7 @@ export const useSSO = () => {
         }
       })
       
-      if (response.success && response.user) {
+      if (response && response.success && response.user) {
         // Lưu user vào localStorage
         if (process.client) {
           localStorage.setItem('auth_user', JSON.stringify(response.user))

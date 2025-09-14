@@ -123,6 +123,7 @@ const processSSOCallback = async () => {
     
     // Get tokenkey from URL
     const tokenkey = route.query.tokenkey as string
+    console.log('SSO Callback - Tokenkey:', tokenkey)
     
     if (!tokenkey) {
       error.value = 'Không tìm thấy token xác thực'
@@ -130,10 +131,12 @@ const processSSOCallback = async () => {
     }
     
     // Validate SSO token
+    console.log('SSO Callback - Validating token...')
     const result = await validateSSOToken(tokenkey)
+    console.log('SSO Callback - Validation result:', result)
     
-    if (!result.success) {
-      error.value = result.error || 'Xác thực SSO thất bại'
+    if (!result || !result.success) {
+      error.value = result?.error || 'Xác thực SSO thất bại'
       return
     }
     
@@ -143,7 +146,9 @@ const processSSOCallback = async () => {
     }
     
     // Login user
+    console.log('SSO Callback - Logging in user...')
     const loginSuccess = await loginSSOUser(result.user, result.ssoUser!)
+    console.log('SSO Callback - Login success:', loginSuccess)
     
     if (!loginSuccess) {
       error.value = 'Đăng nhập thất bại'
@@ -159,6 +164,7 @@ const processSSOCallback = async () => {
     }, 2000)
     
   } catch (err: any) {
+    console.error('SSO Callback Error:', err)
     error.value = err.message || 'Có lỗi xảy ra trong quá trình xác thực'
   } finally {
     loading.value = false
