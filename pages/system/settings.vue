@@ -198,6 +198,12 @@ import SelectValue from '~/components/ui/SelectValue.vue'
 import SelectContent from '~/components/ui/SelectContent.vue'
 import SelectItem from '~/components/ui/SelectItem.vue'
 
+// Set page meta
+definePageMeta({
+  layout: 'default',
+  middleware: 'auth'
+})
+
 // Set page title
 useHead({
   title: 'Cài đặt hệ thống - HNI Operations'

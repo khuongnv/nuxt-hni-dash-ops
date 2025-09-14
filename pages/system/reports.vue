@@ -198,6 +198,12 @@ import TableHead from '~/components/ui/TableHead.vue'
 import TableCell from '~/components/ui/TableCell.vue'
 import Badge from '~/components/ui/Badge.vue'
 
+// Set page meta
+definePageMeta({
+  layout: 'default',
+  middleware: 'auth'
+})
+
 // Set page title
 useHead({
   title: 'Báo cáo & Thống kê - HNI Operations'

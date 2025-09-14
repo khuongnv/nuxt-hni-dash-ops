@@ -304,6 +304,12 @@ import TableHeader from '~/components/ui/TableHeader.vue'
 import TableRow from '~/components/ui/TableRow.vue'
 import Badge from '~/components/ui/Badge.vue'
 
+// Set page meta
+definePageMeta({
+  layout: 'default',
+  middleware: 'auth'
+})
+
 // Set page title
 useHead({
   title: 'Quản lý Thông báo Hệ thống - HNI Dashboard'

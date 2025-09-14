@@ -24,4 +24,15 @@
 
 <script setup lang="ts">
 import PageHeader from '~/components/PageHeader.vue'
+
+// Set page meta
+definePageMeta({
+  layout: 'default',
+  middleware: 'auth'
+})
+
+// Set page title
+useHead({
+  title: 'Báo cáo Doanh thu - HNI Operations'
+})
 </script>
