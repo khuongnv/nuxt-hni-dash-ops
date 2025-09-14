@@ -41,17 +41,26 @@ GET  /api/applications        # Lấy danh sách apps
 ## Technology Stack
 - **Frontend**: Nuxt.js 3
 - **Backend**: .NET Core 6+
-- **Cache**: Redis (for tokens with 5-minute TTL)
+- **Cache**: Redis (for session storage with 2-hour TTL)
 - **Database**: Oracle (for user data)
-- **Token Lifecycle**: Generate → Store in Redis → Auto-expire after 5 minutes
+- **Session Management**: HttpOnly cookies for security
+- **Session Lifecycle**: Login → Set HttpOnly cookie → Store session in Redis → Auto-expire after 2 hours
 
 ## Next Steps
 - User will build backend first
 - Then continue discussion for frontend implementation with Nuxt.js
 
+## Security & Session Management
+- **HttpOnly Cookies**: Secure session management, XSS protection
+- **Redis Sessions**: 2-hour session storage with auto-expiration
+- **No localStorage**: Avoid client-side security risks
+- **Automatic Cookie Handling**: Browser automatically sends cookies
+- **Server-side Validation**: All session validation on backend
+
 ## Notes
 - Simple and focused on core functionality
 - No complex user management
-- Redis for fast token validation and auto-expiration
+- HttpOnly cookies for maximum security
+- Redis for fast session validation and auto-expiration
 - Integration with existing .NET Core SSO system
 - Oracle database for user data only
