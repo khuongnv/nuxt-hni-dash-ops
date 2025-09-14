@@ -141,14 +141,6 @@ const filteredNavigationItems = computed(() => {
         .replace(/[ơƠ]/g, 'o')  // ơ/Ơ → o
         .replace(/[ưƯ]/g, 'u')  // ư/Ư → u
       
-      // Debug for "Đơn vị"
-      if (str === 'Đơn vị') {
-        console.log('Debug removeDiacritics for "Đơn vị":')
-        console.log('  Input:', str)
-        console.log('  NFD normalized:', str.normalize('NFD'))
-        console.log('  After removing diacritics:', result)
-      }
-      
       return result
     }
     
@@ -156,16 +148,6 @@ const filteredNavigationItems = computed(() => {
     const matchesQuery = (text: string, searchQuery: string) => {
       const normalizedText = removeDiacritics(text).toLowerCase()
       const normalizedQuery = removeDiacritics(searchQuery).toLowerCase()
-      
-      // Debug for "don" specifically
-      if (searchQuery.toLowerCase() === 'don') {
-        console.log('Debug "don" search:')
-        console.log('  Original text:', text)
-        console.log('  Normalized text:', normalizedText)
-        console.log('  Original query:', searchQuery)
-        console.log('  Normalized query:', normalizedQuery)
-        console.log('  Match result:', normalizedText.includes(normalizedQuery))
-      }
       
       // Simple check: if normalized text contains normalized query
       return normalizedText.includes(normalizedQuery)
@@ -238,10 +220,6 @@ const loadMenus = async () => {
       }
       
       navigationItems.value = buildNavigationTree(menus)
-      
-      // Debug: log menu data
-      console.log('Menu data from API:', menus)
-      console.log('Final navigation items:', navigationItems.value)
     }
   } catch (error) {
     console.error('Error loading menus:', error)
