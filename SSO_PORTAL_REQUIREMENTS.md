@@ -3,7 +3,8 @@
 ## Architecture
 - **Frontend**: Nuxt.js for SSO portal interface
 - **Backend**: Separate .NET Core service for authentication and token management
-- **Database**: Oracle (existing system)
+- **Cache**: Redis for token storage (5-minute TTL)
+- **Database**: Oracle (existing system for user data)
 
 ## Core Features
 - Login interface (username/password)
@@ -37,6 +38,13 @@ GET  /api/applications        # Lấy danh sách apps
 - Clean, modern interface
 - One-click app access
 
+## Technology Stack
+- **Frontend**: Nuxt.js 3
+- **Backend**: .NET Core 6+
+- **Cache**: Redis (for tokens with 5-minute TTL)
+- **Database**: Oracle (for user data)
+- **Token Lifecycle**: Generate → Store in Redis → Auto-expire after 5 minutes
+
 ## Next Steps
 - User will build backend first
 - Then continue discussion for frontend implementation with Nuxt.js
@@ -44,5 +52,6 @@ GET  /api/applications        # Lấy danh sách apps
 ## Notes
 - Simple and focused on core functionality
 - No complex user management
+- Redis for fast token validation and auto-expiration
 - Integration with existing .NET Core SSO system
-- Oracle database integration
+- Oracle database for user data only
