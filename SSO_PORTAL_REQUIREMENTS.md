@@ -1,66 +1,66 @@
-# SSO Portal Project Requirements
+# Yêu Cầu Dự Án SSO Portal
 
-## Architecture
-- **Frontend**: Nuxt.js for SSO portal interface
-- **Backend**: Separate .NET Core service for authentication and token management
-- **Cache**: Redis for token storage (5-minute TTL)
-- **Database**: Oracle (existing system for user data)
+## Kiến Trúc Hệ Thống
+- **Frontend**: Nuxt.js cho giao diện SSO portal
+- **Backend**: Dịch vụ .NET Core riêng biệt cho xác thực và quản lý session
+- **Cache**: Redis để lưu trữ session (thời hạn 2 giờ)
+- **Database**: Oracle (hệ thống hiện có cho dữ liệu người dùng)
 
-## Core Features
-- Login interface (username/password)
-- Application dashboard showing list of available systems/apps
-- User profile (read-only, basic info)
-- Logout functionality
+## Tính Năng Chính
+- Giao diện đăng nhập (tên đăng nhập/mật khẩu)
+- Bảng điều khiển ứng dụng hiển thị danh sách hệ thống/apps
+- Hồ sơ người dùng (chỉ đọc, thông tin cơ bản)
+- Chức năng đăng xuất
 
-## NOT needed
-- User management (CRUD users)
-- Admin panel
-- Permission management
-- User registration
+## Không Cần Thiết
+- Quản lý người dùng (CRUD users)
+- Bảng quản trị
+- Quản lý quyền hạn
+- Đăng ký người dùng
 
-## Backend APIs needed (4 endpoints)
+## API Backend Cần Thiết (4 endpoints)
 ```
 POST /api/auth/login          # Đăng nhập
 POST /api/auth/logout         # Đăng xuất
-GET  /api/auth/validate       # Validate token
-GET  /api/applications        # Lấy danh sách apps
+GET  /api/auth/validate       # Xác thực session
+GET  /api/applications        # Lấy danh sách ứng dụng
 ```
 
-## APIs không cần (bỏ qua)
+## API Không Cần (bỏ qua)
 - GET /api/user/profile        # Không quản lý user
 - PUT /api/user/password       # Không quản lý user
 - GET /api/user/sessions       # Không quản lý user
 
-## UI Focus
-- Application cards grid layout
-- Search functionality
-- Categories for apps
-- Clean, modern interface
-- One-click app access
+## Tập Trung Giao Diện
+- Bố cục lưới thẻ ứng dụng
+- Chức năng tìm kiếm
+- Phân loại ứng dụng
+- Giao diện sạch, hiện đại
+- Truy cập ứng dụng một click
 
-## Technology Stack
+## Công Nghệ Sử Dụng
 - **Frontend**: Nuxt.js 3
 - **Backend**: .NET Core 6+
-- **Cache**: Redis (for session storage with 2-hour TTL)
-- **Database**: Oracle (for user data)
-- **Session Management**: HttpOnly cookies for security
-- **Session Lifecycle**: Login → Set HttpOnly cookie → Store session in Redis → Auto-expire after 2 hours
+- **Cache**: Redis (lưu trữ session với thời hạn 2 giờ)
+- **Database**: Oracle (cho dữ liệu người dùng)
+- **Quản Lý Session**: HttpOnly cookies để bảo mật
+- **Vòng Đời Session**: Đăng nhập → Set HttpOnly cookie → Lưu session vào Redis → Tự động hết hạn sau 2 giờ
 
-## Next Steps
-- User will build backend first
-- Then continue discussion for frontend implementation with Nuxt.js
+## Bước Tiếp Theo
+- Người dùng sẽ xây dựng backend trước
+- Sau đó tiếp tục thảo luận để triển khai frontend với Nuxt.js
 
-## Security & Session Management
-- **HttpOnly Cookies**: Secure session management, XSS protection
-- **Redis Sessions**: 2-hour session storage with auto-expiration
-- **No localStorage**: Avoid client-side security risks
-- **Automatic Cookie Handling**: Browser automatically sends cookies
-- **Server-side Validation**: All session validation on backend
+## Bảo Mật & Quản Lý Session
+- **HttpOnly Cookies**: Quản lý session an toàn, bảo vệ khỏi XSS
+- **Redis Sessions**: Lưu trữ session 2 giờ với tự động hết hạn
+- **Không localStorage**: Tránh rủi ro bảo mật phía client
+- **Xử Lý Cookie Tự Động**: Trình duyệt tự động gửi cookies
+- **Xác Thực Phía Server**: Tất cả xác thực session trên backend
 
-## Notes
-- Simple and focused on core functionality
-- No complex user management
-- HttpOnly cookies for maximum security
-- Redis for fast session validation and auto-expiration
-- Integration with existing .NET Core SSO system
-- Oracle database for user data only
+## Ghi Chú
+- Đơn giản và tập trung vào chức năng cốt lõi
+- Không có quản lý người dùng phức tạp
+- HttpOnly cookies để bảo mật tối đa
+- Redis để xác thực session nhanh và tự động hết hạn
+- Tích hợp với hệ thống SSO .NET Core hiện có
+- Database Oracle chỉ cho dữ liệu người dùng
