@@ -55,11 +55,6 @@
     <!-- Footer -->
     <div class="border-t border-border p-4 mt-auto">
       <div v-if="!collapsed" class="text-center space-y-2">
-        <!-- App Name -->
-        <div class="text-xs font-medium text-foreground">
-          HniDashOps
-        </div>
-        
         <!-- Version with Build Date -->
         <div class="text-xs text-muted-foreground">
           {{ appVersion }}
