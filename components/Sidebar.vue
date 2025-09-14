@@ -8,6 +8,26 @@
       <!-- Empty logo space -->
     </div>
 
+    <!-- Search Bar -->
+    <div v-if="!collapsed" class="px-4 py-3 border-b border-border">
+      <div class="relative">
+        <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Tìm kiếm menu..."
+          class="w-full pl-10 pr-4 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        />
+        <button
+          v-if="searchQuery"
+          @click="clearSearch"
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground hover:text-foreground"
+        >
+          <X class="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="flex-1 py-6 space-y-1 transition-all duration-300" :class="collapsed ? 'px-2' : 'px-4'">
       <MenuItem
@@ -55,7 +75,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, provide, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { Menu } from 'lucide-vue-next'
+import { Menu, Search, X } from 'lucide-vue-next'
 import MenuItem from '~/components/ui/MenuItem.vue'
 import { useAuth } from '~/composables/useAuth'
 
@@ -76,18 +96,23 @@ const { iconMap, getIconComponent } = useIcons()
 // App version and build info
 const appVersion = ref('')
 
+// Search functionality
+const searchQuery = ref('')
+
 // Navigation items - sử dụng dữ liệu từ API Supabase
 const navigationItems = ref([])
 
-// Filter navigation items based on authentication
+// Filter navigation items based on authentication and search
 const filteredNavigationItems = computed(() => {
   if (!isInitialized.value) {
     return []
   }
   
+  let items = navigationItems.value
+  
+  // Filter by authentication
   if (!isAuthenticated.value) {
-    // Show only public menu items for non-authenticated users
-    return navigationItems.value.filter(item => {
+    items = items.filter(item => {
       return item.href === '/main/dashboard' || 
              item.href === '/main/about' ||
              item.name === 'Dashboard' ||
@@ -95,8 +120,42 @@ const filteredNavigationItems = computed(() => {
     })
   }
   
-  // Show all menu items for authenticated users
-  return navigationItems.value
+  // Filter by search query
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase().trim()
+    items = items.filter(item => {
+      // Search in main item
+      if (item.name.toLowerCase().includes(query)) {
+        return true
+      }
+      
+      // Search in children
+      if (item.children) {
+        const filteredChildren = item.children.filter(child => {
+          if (child.name.toLowerCase().includes(query)) {
+            return true
+          }
+          
+          // Search in grand children
+          if (child.children) {
+            return child.children.some(grandChild => 
+              grandChild.name.toLowerCase().includes(query)
+            )
+          }
+          
+          return false
+        })
+        
+        if (filteredChildren.length > 0) {
+          return true
+        }
+      }
+      
+      return false
+    })
+  }
+  
+  return items
 })
 
 // Load menus from API
@@ -214,6 +273,11 @@ const refreshMenus = () => {
 
 // Provide refresh method to child components
 provide('refreshSidebar', refreshMenus)
+
+// Clear search function
+const clearSearch = () => {
+  searchQuery.value = ''
+}
 </script>
 
 <style scoped>
