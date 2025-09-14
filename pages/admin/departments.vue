@@ -2,8 +2,8 @@
   <div class="h-full flex flex-col space-y-4">
     <!-- Page Header -->
     <PageHeader 
-      title="Quản lý Danh mục" 
-      description="Quản lý các danh mục sản phẩm và dịch vụ"
+      title="Quản lý Đơn vị" 
+      description="Quản lý cấu trúc tổ chức và đơn vị"
     />
 
     <!-- Actions Bar -->
@@ -11,9 +11,9 @@
       <div class="flex items-center gap-3">
         <Button @click="openCreateModal" class="flex items-center gap-2">
           <Plus class="w-4 h-4" />
-          Thêm danh mục mới
+          Thêm đơn vị mới
         </Button>
-        <Button variant="outline" @click="loadCategories" :disabled="loading">
+        <Button variant="outline" @click="loadDepartments" :disabled="loading">
           <RefreshCw class="w-4 h-4" :class="{ 'animate-spin': loading }" />
           Làm mới
         </Button>
@@ -26,25 +26,25 @@
           class="w-40 h-10 px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
         >
           <option value="all">Tất cả</option>
-          <option value="root">Danh mục gốc</option>
-          <option value="child">Danh mục con</option>
+          <option value="root">Đơn vị gốc</option>
+          <option value="child">Đơn vị con</option>
         </select>
         
         <input 
           :value="searchQuery"
           @input="searchQuery = ($event.target as HTMLInputElement).value"
-          placeholder="Tìm kiếm danh mục..." 
+          placeholder="Tìm kiếm đơn vị..." 
           class="w-64 h-10 px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
         />
       </div>
     </div>
 
-    <!-- Categories Table -->
+    <!-- Departments Table -->
     <Card class="-mt-2">
       <CardHeader>
-        <CardTitle>Danh sách Danh mục</CardTitle>
+        <CardTitle>Danh sách Đơn vị</CardTitle>
         <CardDescription>
-          Tổng cộng {{ filteredCategories.length }} danh mục
+          Tổng cộng {{ filteredDepartments.length }} đơn vị
           <span v-if="searchQuery" class="text-blue-600">
             (Tìm kiếm: "{{ searchQuery }}")
           </span>
@@ -57,10 +57,10 @@
               <TableRow>
                 <TableHead class="w-12">#</TableHead>
                 <TableHead>Code</TableHead>
-                <TableHead>Tên danh mục</TableHead>
-                <TableHead>Danh mục cha</TableHead>
+                <TableHead>Tên đơn vị</TableHead>
+                <TableHead>Đơn vị cha</TableHead>
                 <TableHead>Cấp</TableHead>
-                <TableHead>Map ID</TableHead>
+                <TableHead>Đơn vị</TableHead>
                 <TableHead>Ghi chú</TableHead>
                 <TableHead>Ngày tạo</TableHead>
                 <TableHead class="w-32">Thao tác</TableHead>
@@ -75,23 +75,23 @@
                   </div>
                 </TableCell>
               </TableRow>
-              <TableRow v-else-if="filteredCategories.length === 0">
+              <TableRow v-else-if="filteredDepartments.length === 0">
                 <TableCell colspan="9" class="text-center py-8 text-muted-foreground">
-                  Không có danh mục nào
+                  Không có đơn vị nào
                 </TableCell>
               </TableRow>
-              <TableRow v-else v-for="category in filteredCategories" :key="category.id" class="table-row-fixed">
-                <TableCell class="font-medium align-middle">{{ category.id }}</TableCell>
+              <TableRow v-else v-for="department in filteredDepartments" :key="department.id" class="table-row-fixed">
+                <TableCell class="font-medium align-middle">{{ department.id }}</TableCell>
                 <TableCell class="align-middle">
-                  <Badge variant="outline">{{ category.code }}</Badge>
+                  <Badge variant="outline">{{ department.code }}</Badge>
                 </TableCell>
                 <TableCell class="align-middle">
                   <div class="flex items-center gap-2">
                     <!-- Tree structure indicators -->
                     <div class="flex items-center">
-                      <template v-for="i in getCategoryLevel(category) - 1" :key="i">
+                      <template v-for="i in department.level - 1" :key="i">
                         <div class="w-4 h-4 flex items-center justify-center">
-                          <div v-if="i === getCategoryLevel(category) - 1" class="w-3 h-3 flex items-center justify-center">
+                          <div v-if="i === department.level - 1" class="w-3 h-3 flex items-center justify-center">
                             <!-- Last level indicator -->
                             <div class="w-4 h-4 border-l-2 border-b-2 border-muted-foreground/60 rounded-bl-sm"></div>
                           </div>
@@ -105,63 +105,63 @@
                     
                     <!-- Collapse/Expand button -->
                     <button 
-                      v-if="hasChildren(category.id)"
-                      @click="toggleCategoryCollapse(category.id)"
+                      v-if="hasChildren(department.id)"
+                      @click="toggleDepartmentCollapse(department.id)"
                       class="flex items-center justify-center w-4 h-4 rounded hover:bg-muted transition-colors cursor-pointer"
-                      :title="isCategoryCollapsed(category.id) ? 'Mở rộng' : 'Thu gọn'"
+                      :title="isDepartmentCollapsed(department.id) ? 'Mở rộng' : 'Thu gọn'"
                     >
                       <ChevronRight 
                         :class="[
                           'w-3 h-3 transition-transform duration-200 text-muted-foreground',
-                          isCategoryCollapsed(category.id) ? 'rotate-0' : 'rotate-90'
+                          isDepartmentCollapsed(department.id) ? 'rotate-0' : 'rotate-90'
                         ]"
                       />
                     </button>
                     <div v-else class="w-4 h-4"></div>
                     
                     <div class="font-medium text-foreground">
-                      {{ category.name }}
+                      {{ department.name }}
                     </div>
                   </div>
                 </TableCell>
                 <TableCell class="align-middle">
-                  <span v-if="category.parent_id" class="text-sm text-muted-foreground">
-                    {{ getParentName(category.parent_id) }}
+                  <span v-if="department.parent_id" class="text-sm text-muted-foreground">
+                    {{ getParentName(department.parent_id) }}
                   </span>
-                  <span v-else class="text-sm text-muted-foreground">Danh mục gốc</span>
+                  <span v-else class="text-sm text-muted-foreground">Đơn vị gốc</span>
                 </TableCell>
                 <TableCell class="align-middle">
                   <Badge variant="outline" class="text-xs">
-                    Cấp {{ getCategoryLevel(category) }}
+                    Cấp {{ department.level }}
                   </Badge>
                 </TableCell>
                 <TableCell class="align-middle">
-                  <span v-if="category.map_id" class="text-sm">{{ category.map_id }}</span>
+                  <span v-if="department.map_id" class="text-sm">{{ department.map_id }}</span>
                   <span v-else class="text-sm text-muted-foreground">-</span>
                 </TableCell>
                 <TableCell class="align-middle">
-                  <span v-if="category.note" class="text-sm text-muted-foreground max-w-xs truncate">
-                    {{ category.note }}
+                  <span v-if="department.note" class="text-sm text-muted-foreground max-w-xs truncate">
+                    {{ department.note }}
                   </span>
                   <span v-else class="text-sm text-muted-foreground">-</span>
                 </TableCell>
                 <TableCell class="text-sm text-muted-foreground">
-                  {{ formatDate(category.created_at) }}
+                  {{ formatDate(department.created_at) }}
                 </TableCell>
                 <TableCell>
                   <div class="flex items-center gap-1">
                     <Button
                       variant="ghost"
                       size="sm"
-                      @click="openEditModal(category)"
+                      @click="openEditModal(department)"
                     >
                       <Edit class="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      @click="confirmDelete(category)"
-                      :disabled="hasChildren(category.id)"
+                      @click="confirmDelete(department)"
+                      :disabled="hasChildren(department.id)"
                       class="text-destructive hover:text-destructive"
                     >
                       <Trash2 class="h-4 w-4" />
@@ -186,7 +186,7 @@
         @click.stop
       >
         <h3 class="text-lg font-semibold mb-4">
-          {{ isEditing ? 'Sửa danh mục' : 'Thêm danh mục mới' }}
+          {{ isEditing ? 'Sửa đơn vị' : 'Thêm đơn vị mới' }}
         </h3>
 
         <form @submit.prevent="submitForm" class="space-y-4">
@@ -199,32 +199,32 @@
               type="text"
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Nhập code danh mục"
+              placeholder="Nhập code đơn vị"
             />
           </div>
 
           <!-- Name -->
           <div>
-            <Label for="name">Tên danh mục *</Label>
+            <Label for="name">Tên đơn vị *</Label>
             <input
               id="name"
               v-model="form.name"
               type="text"
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Nhập tên danh mục"
+              placeholder="Nhập tên đơn vị"
             />
           </div>
 
-          <!-- Parent Category -->
+          <!-- Parent Department -->
           <div>
-            <Label for="parent_id">Danh mục cha</Label>
+            <Label for="parent_id">Đơn vị cha</Label>
             <select
               id="parent_id"
               v-model="form.parent_id"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="">Chọn danh mục cha (tùy chọn)</option>
+              <option value="">Chọn đơn vị cha (tùy chọn)</option>
               <option
                 v-for="parent in availableParents"
                 :key="parent.id"
@@ -235,15 +235,30 @@
             </select>
           </div>
 
+          <!-- Level -->
+          <div>
+            <Label for="level">Cấp tổ chức *</Label>
+            <input
+              id="level"
+              v-model.number="form.level"
+              type="number"
+              min="1"
+              max="10"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Nhập cấp tổ chức (1-10)"
+            />
+          </div>
+
           <!-- Map ID -->
           <div>
-            <Label for="map_id">Map ID</Label>
+            <Label for="map_id">Đơn vị</Label>
             <input
               id="map_id"
               v-model.number="form.map_id"
               type="number"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Nhập Map ID (tùy chọn)"
+              placeholder="Nhập ID đơn vị (tùy chọn)"
             />
           </div>
 
@@ -293,8 +308,8 @@
       >
         <h3 class="text-lg font-semibold mb-4 text-red-600">Xác nhận xóa</h3>
         <p class="text-gray-600 mb-6">
-          Bạn có chắc chắn muốn xóa danh mục 
-          <strong>"{{ categoryToDelete?.name }}"</strong>?
+          Bạn có chắc chắn muốn xóa đơn vị 
+          <strong>"{{ departmentToDelete?.name }}"</strong>?
           <br>
           <span class="text-sm text-red-500">Hành động này không thể hoàn tác.</span>
         </p>
@@ -308,7 +323,7 @@
           </Button>
           <Button
             variant="destructive"
-            @click="deleteCategory"
+            @click="deleteDepartment"
             :disabled="deleting"
             class="flex-1"
           >
@@ -323,7 +338,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { Plus, Edit, Trash2, RefreshCw, ChevronRight } from 'lucide-vue-next'
-import { useCategories, type Category } from '~/composables/useCategories'
+import { useDepartments, type Department } from '~/composables/useDepartments'
 import Button from '~/components/ui/Button.vue'
 import Card from '~/components/ui/Card.vue'
 import CardHeader from '~/components/ui/CardHeader.vue'
@@ -347,19 +362,19 @@ definePageMeta({
 
 // Composables
 const { 
-  getCategories, 
-  createCategory, 
-  updateCategory, 
-  deleteCategory: deleteCategoryApi,
-  getParentCategories 
-} = useCategories()
+  getDepartments, 
+  createDepartment, 
+  updateDepartment, 
+  deleteDepartment: deleteDepartmentApi,
+  getParentDepartments 
+} = useDepartments()
 
 // Reactive data
-const categories = ref<Category[]>([])
+const departments = ref<Department[]>([])
 const loading = ref(false)
 const searchQuery = ref('')
 const parentFilter = ref('all')
-const collapsedCategories = ref<Set<number>>(new Set())
+const collapsedDepartments = ref<Set<number>>(new Set())
 
 // Modal states
 const showModal = ref(false)
@@ -367,7 +382,7 @@ const showDeleteModal = ref(false)
 const isEditing = ref(false)
 const submitting = ref(false)
 const deleting = ref(false)
-const categoryToDelete = ref<Category | null>(null)
+const departmentToDelete = ref<Department | null>(null)
 
 // Form data
 const form = ref({
@@ -376,71 +391,72 @@ const form = ref({
   name: '',
   parent_id: null as number | null,
   map_id: null as number | null,
+  level: 1,
   note: ''
 })
 
 // Helper functions for tree structure
-const hasChildren = (categoryId: number): boolean => {
-  return categories.value.some(cat => cat.parent_id === categoryId)
+const hasChildren = (departmentId: number): boolean => {
+  return departments.value.some(dept => dept.parent_id === departmentId)
 }
 
-const toggleCategoryCollapse = (categoryId: number) => {
-  if (collapsedCategories.value.has(categoryId)) {
-    collapsedCategories.value.delete(categoryId)
+const toggleDepartmentCollapse = (departmentId: number) => {
+  if (collapsedDepartments.value.has(departmentId)) {
+    collapsedDepartments.value.delete(departmentId)
   } else {
-    collapsedCategories.value.add(categoryId)
+    collapsedDepartments.value.add(departmentId)
   }
 }
 
-const isCategoryCollapsed = (categoryId: number): boolean => {
-  return collapsedCategories.value.has(categoryId)
+const isDepartmentCollapsed = (departmentId: number): boolean => {
+  return collapsedDepartments.value.has(departmentId)
 }
 
-const isAnyParentCollapsed = (category: Category): boolean => {
-  if (!category.parent_id) return false
+const isAnyParentCollapsed = (department: Department): boolean => {
+  if (!department.parent_id) return false
   
-  const parent = categories.value.find(c => c.id === category.parent_id)
+  const parent = departments.value.find(d => d.id === department.parent_id)
   if (!parent) return false
   
-  if (isCategoryCollapsed(parent.id)) return true
+  if (isDepartmentCollapsed(parent.id)) return true
   
   return isAnyParentCollapsed(parent)
 }
 
 // Helper function to build tree structure
-const buildTreeStructure = (categories: Category[]) => {
-  const result: Category[] = []
+const buildTreeStructure = (departments: Department[]) => {
+  const result: Department[] = []
   const processed = new Set<number>()
   
-  // First, add all root categories (categories without parent)
-  const rootCategories = categories.filter(cat => !cat.parent_id).sort((a, b) => a.id - b.id)
+  // First, add all level 1 departments (root departments)
+  const rootDepartments = departments.filter(dept => dept.level === 1).sort((a, b) => a.id - b.id)
   
-  const addCategoryAndChildren = (category: Category) => {
-    if (processed.has(category.id)) return
+  const addDepartmentAndChildren = (department: Department) => {
+    if (processed.has(department.id)) return
     
-    // Only add category if no parent is collapsed
-    if (!isAnyParentCollapsed(category)) {
-      result.push(category)
-      processed.add(category.id)
+    // Only add department if no parent is collapsed
+    if (!isAnyParentCollapsed(department)) {
+      result.push(department)
+      processed.add(department.id)
       
-      // Only add children if current category is not collapsed
-      if (!isCategoryCollapsed(category.id)) {
-        const children = categories
-          .filter(child => child.parent_id === category.id)
+      // Only add children if current department is not collapsed
+      if (!isDepartmentCollapsed(department.id)) {
+        const children = departments
+          .filter(child => child.parent_id === department.id)
           .sort((a, b) => a.id - b.id)
         
-        children.forEach(child => addCategoryAndChildren(child))
+        children.forEach(child => addDepartmentAndChildren(child))
       }
     }
   }
   
-  // Process all root categories and their descendants
-  rootCategories.forEach(rootCategory => addCategoryAndChildren(rootCategory))
+  // Process all root departments and their descendants
+  rootDepartments.forEach(rootDepartment => addDepartmentAndChildren(rootDepartment))
   
-  // Add any remaining categories that weren't processed (orphaned categories)
-  categories.forEach(category => {
-    if (!processed.has(category.id) && !isAnyParentCollapsed(category)) {
-      result.push(category)
+  // Add any remaining departments that weren't processed (orphaned departments)
+  departments.forEach(department => {
+    if (!processed.has(department.id) && !isAnyParentCollapsed(department)) {
+      result.push(department)
     }
   })
   
@@ -456,13 +472,13 @@ const removeDiacritics = (str: string): string => {
     .replace(/Đ/g, 'D')
 }
 
-// Helper function to get all parent categories
-const getAllParentCategories = (category: Category): Category[] => {
-  const parents: Category[] = []
-  let currentParent = category.parent_id
+// Helper function to get all parent departments
+const getAllParentDepartments = (department: Department): Department[] => {
+  const parents: Department[] = []
+  let currentParent = department.parent_id
   
   while (currentParent) {
-    const parent = categories.value.find(c => c.id === currentParent)
+    const parent = departments.value.find(d => d.id === currentParent)
     if (parent) {
       parents.unshift(parent) // Add to beginning to maintain order
       currentParent = parent.parent_id
@@ -475,47 +491,47 @@ const getAllParentCategories = (category: Category): Category[] => {
 }
 
 // Computed
-const filteredCategories = computed(() => {
-  let result = categories.value
+const filteredDepartments = computed(() => {
+  let result = departments.value
   
   // Apply search filter if needed
   if (searchQuery.value && searchQuery.value.trim()) {
     const searchTerm = searchQuery.value.toLowerCase().trim()
     const searchTermNoDiacritics = removeDiacritics(searchTerm)
     
-    const matchingCategories = result.filter(category => {
-      const categoryName = category.name.toLowerCase()
-      const categoryNameNoDiacritics = removeDiacritics(categoryName)
-      const categoryCode = category.code.toLowerCase()
-      const categoryCodeNoDiacritics = removeDiacritics(categoryCode)
+    const matchingDepartments = result.filter(department => {
+      const departmentName = department.name.toLowerCase()
+      const departmentNameNoDiacritics = removeDiacritics(departmentName)
+      const departmentCode = department.code.toLowerCase()
+      const departmentCodeNoDiacritics = removeDiacritics(departmentCode)
       
-      return categoryName.includes(searchTerm) ||
-             categoryNameNoDiacritics.includes(searchTermNoDiacritics) ||
-             categoryCode.includes(searchTerm) ||
-             categoryCodeNoDiacritics.includes(searchTermNoDiacritics)
+      return departmentName.includes(searchTerm) ||
+             departmentNameNoDiacritics.includes(searchTermNoDiacritics) ||
+             departmentCode.includes(searchTerm) ||
+             departmentCodeNoDiacritics.includes(searchTermNoDiacritics)
     })
     
-    // Include all parent categories for matching categories
-    const allCategoriesToShow = new Set<number>()
+    // Include all parent departments for matching departments
+    const allDepartmentsToShow = new Set<number>()
     
-    matchingCategories.forEach(category => {
-      // Add the matching category itself
-      allCategoriesToShow.add(category.id)
+    matchingDepartments.forEach(department => {
+      // Add the matching department itself
+      allDepartmentsToShow.add(department.id)
       
-      // Add all its parent categories
-      const parents = getAllParentCategories(category)
-      parents.forEach(parent => allCategoriesToShow.add(parent.id))
+      // Add all its parent departments
+      const parents = getAllParentDepartments(department)
+      parents.forEach(parent => allDepartmentsToShow.add(parent.id))
     })
     
-    // Filter to only show categories that should be displayed
-    result = result.filter(category => allCategoriesToShow.has(category.id))
+    // Filter to only show departments that should be displayed
+    result = result.filter(department => allDepartmentsToShow.has(department.id))
   }
 
   // Parent filter
   if (parentFilter.value === 'root') {
-    result = result.filter(cat => !cat.parent_id)
+    result = result.filter(dept => !dept.parent_id)
   } else if (parentFilter.value === 'child') {
-    result = result.filter(cat => cat.parent_id)
+    result = result.filter(dept => dept.parent_id)
   }
   
   // Build tree structure for proper hierarchy display
@@ -524,19 +540,19 @@ const filteredCategories = computed(() => {
 
 const availableParents = computed(() => {
   if (isEditing.value) {
-    // When editing, exclude current category and its children
-    return getParentCategories(categories.value, form.value.id)
+    // When editing, exclude current department and its children
+    return getParentDepartments(departments.value, form.value.id)
   }
-  return getParentCategories(categories.value)
+  return getParentDepartments(departments.value)
 })
 
 // Methods
-const loadCategories = async () => {
+const loadDepartments = async () => {
   loading.value = true
   try {
-    categories.value = await getCategories()
+    departments.value = await getDepartments()
   } catch (error) {
-    console.error('Error loading categories:', error)
+    console.error('Error loading departments:', error)
   } finally {
     loading.value = false
   }
@@ -547,25 +563,8 @@ const applyFilters = () => {
 }
 
 const getParentName = (parentId: number): string => {
-  const parent = categories.value.find(cat => cat.id === parentId)
+  const parent = departments.value.find(dept => dept.id === parentId)
   return parent ? `${parent.name} (${parent.code})` : 'Không xác định'
-}
-
-const getCategoryLevel = (category: Category): number => {
-  let level = 1
-  let currentParent = category.parent_id
-  
-  while (currentParent) {
-    level++
-    const parent = categories.value.find(c => c.id === currentParent)
-    if (parent) {
-      currentParent = parent.parent_id
-    } else {
-      break
-    }
-  }
-  
-  return level
 }
 
 const formatDate = (dateString: string): string => {
@@ -579,6 +578,7 @@ const resetForm = () => {
     name: '',
     parent_id: null,
     map_id: null,
+    level: 1,
     note: ''
   }
 }
@@ -589,15 +589,16 @@ const openCreateModal = () => {
   showModal.value = true
 }
 
-const openEditModal = (category: Category) => {
+const openEditModal = (department: Department) => {
   isEditing.value = true
   form.value = {
-    id: category.id,
-    code: category.code,
-    name: category.name,
-    parent_id: category.parent_id,
-    map_id: category.map_id,
-    note: category.note || ''
+    id: department.id,
+    code: department.code,
+    name: department.name,
+    parent_id: department.parent_id,
+    map_id: department.map_id,
+    level: department.level,
+    note: department.note || ''
   }
   showModal.value = true
 }
@@ -616,24 +617,26 @@ const submitForm = async () => {
   submitting.value = true
   try {
     if (isEditing.value) {
-      await updateCategory(form.value.id!, {
+      await updateDepartment(form.value.id!, {
         code: form.value.code,
         name: form.value.name,
         parent_id: form.value.parent_id,
         map_id: form.value.map_id,
+        level: form.value.level,
         note: form.value.note || null
       })
     } else {
-      await createCategory({
+      await createDepartment({
         code: form.value.code,
         name: form.value.name,
         parent_id: form.value.parent_id,
         map_id: form.value.map_id,
+        level: form.value.level,
         note: form.value.note || null
       })
     }
     
-    await loadCategories()
+    await loadDepartments()
     closeModal()
   } catch (error) {
     console.error('Error submitting form:', error)
@@ -642,26 +645,26 @@ const submitForm = async () => {
   }
 }
 
-const confirmDelete = (category: Category) => {
-  categoryToDelete.value = category
+const confirmDelete = (department: Department) => {
+  departmentToDelete.value = department
   showDeleteModal.value = true
 }
 
 const closeDeleteModal = () => {
   showDeleteModal.value = false
-  categoryToDelete.value = null
+  departmentToDelete.value = null
 }
 
-const deleteCategory = async () => {
-  if (!categoryToDelete.value) return
+const deleteDepartment = async () => {
+  if (!departmentToDelete.value) return
 
   deleting.value = true
   try {
-    await deleteCategoryApi(categoryToDelete.value.id)
-    await loadCategories()
+    await deleteDepartmentApi(departmentToDelete.value.id)
+    await loadDepartments()
     closeDeleteModal()
   } catch (error) {
-    console.error('Error deleting category:', error)
+    console.error('Error deleting department:', error)
   } finally {
     deleting.value = false
   }
@@ -670,6 +673,6 @@ const deleteCategory = async () => {
 
 // Lifecycle
 onMounted(() => {
-  loadCategories()
+  loadDepartments()
 })
 </script>

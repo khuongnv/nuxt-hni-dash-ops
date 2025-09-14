@@ -107,4 +107,18 @@
     @apply grid gap-4;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
+  
+  /* Fixed table row height */
+  .table-row-fixed {
+    height: 4rem !important;
+    min-height: 4rem !important;
+    max-height: 4rem !important;
+  }
+  
+  .table-row-fixed td {
+    vertical-align: middle !important;
+    height: 4rem !important;
+    min-height: 4rem !important;
+    max-height: 4rem !important;
+  }
 }
