@@ -123,20 +123,21 @@ const filteredNavigationItems = computed(() => {
   // Filter by search query
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase().trim()
-    items = items.filter(item => {
-      // Search in main item
+    items = items.map(item => {
+      // If main item matches, return it with all children
       if (item.name.toLowerCase().includes(query)) {
-        return true
+        return item
       }
       
-      // Search in children
+      // If main item doesn't match, check children
       if (item.children) {
         const filteredChildren = item.children.filter(child => {
+          // Check if child matches
           if (child.name.toLowerCase().includes(query)) {
             return true
           }
           
-          // Search in grand children
+          // Check grand children
           if (child.children) {
             return child.children.some(grandChild => 
               grandChild.name.toLowerCase().includes(query)
@@ -146,13 +147,17 @@ const filteredNavigationItems = computed(() => {
           return false
         })
         
+        // If any children match, return parent with filtered children
         if (filteredChildren.length > 0) {
-          return true
+          return {
+            ...item,
+            children: filteredChildren
+          }
         }
       }
       
-      return false
-    })
+      return null
+    }).filter(item => item !== null)
   }
   
   return items
@@ -277,7 +282,24 @@ provide('refreshSidebar', refreshMenus)
 // Clear search function
 const clearSearch = () => {
   searchQuery.value = ''
+  // Close all submenus when clearing search
+  openSubmenus.value = []
 }
+
+// Auto-open submenus when searching
+watch(searchQuery, (newQuery) => {
+  if (newQuery.trim()) {
+    // Auto-open all submenus when searching
+    const allSubmenuNames = navigationItems.value
+      .filter(item => item.children && item.children.length > 0)
+      .map(item => item.name)
+    
+    openSubmenus.value = [...new Set([...openSubmenus.value, ...allSubmenuNames])]
+  } else {
+    // Close all submenus when search is cleared
+    openSubmenus.value = []
+  }
+})
 </script>
 
 <style scoped>
