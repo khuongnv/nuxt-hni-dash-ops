@@ -9,7 +9,7 @@
     </div>
 
     <!-- Search Bar -->
-    <div v-if="!collapsed" class="px-4 py-3">
+    <div v-if="!collapsed" class="px-4 pt-6 pb-1">
       <div class="relative">
         <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
@@ -29,7 +29,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="flex-1 py-3 space-y-1 transition-all duration-300" :class="collapsed ? 'px-2' : 'px-4'">
+    <nav class="flex-1 pt-0 pb-6 space-y-1 transition-all duration-300" :class="collapsed ? 'px-2' : 'px-4'">
       <MenuItem
         v-for="item in filteredNavigationItems"
         :key="item.name"
