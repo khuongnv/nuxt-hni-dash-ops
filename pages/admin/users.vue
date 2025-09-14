@@ -359,7 +359,8 @@ import { useDepartments } from '~/composables/useDepartments'
 import { useCategories } from '~/composables/useCategories'
 
 definePageMeta({
-  layout: 'default'
+  layout: 'default',
+  middleware: 'auth'
 })
 
 const { getUsers, createUser, updateUser, deleteUser } = useUsers()

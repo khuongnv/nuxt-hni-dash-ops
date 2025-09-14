@@ -357,7 +357,8 @@ import PageHeader from '~/components/PageHeader.vue'
 
 // Meta
 definePageMeta({
-  layout: 'default'
+  layout: 'default',
+  middleware: 'auth'
 })
 
 // Composables

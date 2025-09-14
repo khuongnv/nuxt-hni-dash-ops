@@ -11,7 +11,7 @@
     <!-- Navigation -->
     <nav class="flex-1 py-6 space-y-1 transition-all duration-300" :class="collapsed ? 'px-2' : 'px-4'">
       <MenuItem
-        v-for="item in navigationItems"
+        v-for="item in filteredNavigationItems"
         :key="item.name"
         :item="item"
         :level="0"
@@ -26,10 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, provide } from 'vue'
+import { ref, onMounted, watch, provide, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { Menu } from 'lucide-vue-next'
 import MenuItem from '~/components/ui/MenuItem.vue'
+import { useAuth } from '~/composables/useAuth'
 
 // Props
 const props = defineProps<{
@@ -39,11 +40,34 @@ const props = defineProps<{
 // Route
 const route = useRoute()
 
+// Auth
+const { isAuthenticated, isInitialized } = useAuth()
+
 // Use icons composable
 const { iconMap, getIconComponent } = useIcons()
 
 // Navigation items - sử dụng dữ liệu từ API Supabase
 const navigationItems = ref([])
+
+// Filter navigation items based on authentication
+const filteredNavigationItems = computed(() => {
+  if (!isInitialized.value) {
+    return []
+  }
+  
+  if (!isAuthenticated.value) {
+    // Show only public menu items for non-authenticated users
+    return navigationItems.value.filter(item => {
+      return item.href === '/main/dashboard' || 
+             item.href === '/main/about' ||
+             item.name === 'Dashboard' ||
+             item.name === 'About'
+    })
+  }
+  
+  // Show all menu items for authenticated users
+  return navigationItems.value
+})
 
 // Load menus from API
 const loadMenus = async () => {

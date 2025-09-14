@@ -195,7 +195,8 @@ import { useGitLog, type GitLogData } from '~/composables/useGitLog'
 
 // Page meta
 definePageMeta({
-  layout: 'default'
+  layout: 'default',
+  middleware: 'auth'
 })
 
 // Composables
