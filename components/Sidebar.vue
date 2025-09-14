@@ -9,7 +9,7 @@
     </div>
 
     <!-- Search Bar -->
-    <div v-if="!collapsed" class="px-4 pt-6 pb-1">
+    <div v-if="!collapsed" class="px-4 pt-3 pb-1">
       <div class="relative">
         <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
