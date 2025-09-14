@@ -5,7 +5,15 @@
   >
     <!-- Logo -->
     <div class="flex h-16 items-center justify-center border-b border-border">
-      <!-- Empty logo space -->
+      <div v-if="!collapsed" class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+          <span class="text-primary-foreground font-bold text-sm">H</span>
+        </div>
+        <span class="font-semibold text-foreground">HniDashOps</span>
+      </div>
+      <div v-else class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+        <span class="text-primary-foreground font-bold text-sm">H</span>
+      </div>
     </div>
 
     <!-- Search Bar -->
