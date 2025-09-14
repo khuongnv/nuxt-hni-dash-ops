@@ -116,6 +116,7 @@ import DropdownMenuItem from '~/components/ui/DropdownMenuItem.vue'
 import Avatar from '~/components/ui/Avatar.vue'
 import AvatarFallback from '~/components/ui/AvatarFallback.vue'
 import { useAuth } from '~/composables/useAuth'
+import { useSSO } from '~/composables/useSSO'
 
 interface Props {
   collapsed: boolean
@@ -142,6 +143,9 @@ const {
   logout 
 } = useAuth()
 
+// SSO
+const { logoutSSO, isSSOSession } = useSSO()
+
 // Toggle color mode
 const toggleColorMode = () => {
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
@@ -162,8 +166,13 @@ const getUserInitials = () => {
 
 // Handle logout
 const handleLogout = () => {
-  logout()
-  router.push('/login')
+  // Check if current session is from SSO
+  if (isSSOSession()) {
+    logoutSSO() // This will redirect to SSO logout
+  } else {
+    logout()
+    router.push('/login')
+  }
 }
 
 // Go to login

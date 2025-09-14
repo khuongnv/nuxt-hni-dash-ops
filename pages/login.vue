@@ -55,6 +55,29 @@
           </button>
         </div>
 
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300" />
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-gray-50 text-gray-500">Hoặc</span>
+          </div>
+        </div>
+
+        <div>
+          <button
+            type="button"
+            @click="handleSSOLogin"
+            :disabled="loading"
+            class="group relative w-full flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+              <Shield class="h-4 w-4 text-gray-400 group-hover:text-gray-500" />
+            </span>
+            Đăng nhập SSO
+          </button>
+        </div>
+
         <div class="text-center">
           <p class="text-sm text-gray-600">
             Demo: Sử dụng username/password từ danh sách người dùng
@@ -67,13 +90,16 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Shield } from 'lucide-vue-next'
 import { useAuth } from '~/composables/useAuth'
+import { useSSO } from '~/composables/useSSO'
 
 definePageMeta({
   layout: false // Không sử dụng layout mặc định
 })
 
 const { login } = useAuth()
+const { redirectToSSO } = useSSO()
 const router = useRouter()
 
 // Form state
@@ -107,6 +133,19 @@ const handleLogin = async () => {
     console.error('Login error:', error)
     errorMessage.value = 'Có lỗi xảy ra khi đăng nhập'
   } finally {
+    loading.value = false
+  }
+}
+
+const handleSSOLogin = () => {
+  loading.value = true
+  errorMessage.value = ''
+  
+  try {
+    redirectToSSO()
+  } catch (error) {
+    console.error('SSO redirect error:', error)
+    errorMessage.value = 'Có lỗi xảy ra khi chuyển hướng SSO'
     loading.value = false
   }
 }
