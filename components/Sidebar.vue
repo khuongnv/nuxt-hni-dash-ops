@@ -31,14 +31,9 @@
           HniDashOps
         </div>
         
-        <!-- Version -->
+        <!-- Version with Build Date -->
         <div class="text-xs text-muted-foreground">
-          v{{ appVersion }}
-        </div>
-        
-        <!-- Build Date -->
-        <div class="text-xs text-muted-foreground">
-          {{ buildDate }}
+          {{ appVersion }}
         </div>
         
         <!-- Copyright -->
@@ -79,8 +74,7 @@ const { isAuthenticated, isInitialized } = useAuth()
 const { iconMap, getIconComponent } = useIcons()
 
 // App version and build info
-const appVersion = ref('1.0.0')
-const buildDate = ref('')
+const appVersion = ref('')
 
 // Navigation items - sử dụng dữ liệu từ API Supabase
 const navigationItems = ref([])
@@ -193,12 +187,12 @@ const isSubmenuActive = (children: any[]) => {
 onMounted(() => {
   loadMenus()
   
-  // Set build date
-  buildDate.value = new Date().toLocaleDateString('vi-VN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  })
+  // Set version with build date (v.1.0.yyyymmdd)
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  appVersion.value = `v.1.0.${year}${month}${day}`
   
   // Listen for storage events to refresh menus when data changes
   window.addEventListener('storage', (e) => {
