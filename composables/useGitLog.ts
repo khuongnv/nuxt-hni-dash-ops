@@ -17,6 +17,7 @@ export interface GitLogData {
     commits: string[]
   } | null
   rawLog: string
+  source: 'local' | 'github' | 'fallback'
 }
 
 export interface GitLogResponse {

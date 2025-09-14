@@ -34,7 +34,7 @@
         <!-- Git log content -->
         <div v-else-if="gitData" class="space-y-6">
           <!-- Repository info -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="p-4 border rounded-lg">
               <h4 class="font-medium text-sm text-muted-foreground mb-1">Branch hiện tại</h4>
               <p class="text-lg font-semibold">{{ gitData.currentBranch }}</p>
@@ -47,6 +47,36 @@
               <h4 class="font-medium text-sm text-muted-foreground mb-1">Commits gần đây</h4>
               <p class="text-lg font-semibold">{{ gitData.commits.length }}</p>
             </div>
+            <div class="p-4 border rounded-lg">
+              <h4 class="font-medium text-sm text-muted-foreground mb-1">Nguồn dữ liệu</h4>
+              <Badge 
+                :variant="gitData.source === 'local' ? 'default' : gitData.source === 'github' ? 'secondary' : 'destructive'"
+                class="text-xs"
+              >
+                {{ getSourceLabel(gitData.source) }}
+              </Badge>
+            </div>
+          </div>
+          
+          <!-- Source info -->
+          <div v-if="gitData.source === 'github'" class="p-4 border border-blue-200 rounded-lg bg-blue-50">
+            <div class="flex items-center gap-2">
+              <GitBranch class="h-5 w-5 text-blue-600" />
+              <h3 class="text-blue-800 font-medium">Dữ liệu từ GitHub API</h3>
+            </div>
+            <p class="text-blue-600 text-sm mt-1">
+              Đang hiển thị dữ liệu từ GitHub repository (production mode)
+            </p>
+          </div>
+          
+          <div v-else-if="gitData.source === 'fallback'" class="p-4 border border-red-200 rounded-lg bg-red-50">
+            <div class="flex items-center gap-2">
+              <AlertTriangle class="h-5 w-5 text-red-600" />
+              <h3 class="text-red-800 font-medium">Dữ liệu fallback</h3>
+            </div>
+            <p class="text-red-600 text-sm mt-1">
+              Không thể truy cập GitHub API, hiển thị dữ liệu mặc định
+            </p>
           </div>
           
           <!-- Unpushed commits warning -->
@@ -160,6 +190,19 @@ const copyCommitHash = async (hash: string) => {
     // You could add a toast notification here
   } catch (err) {
     console.error('Failed to copy commit hash:', err)
+  }
+}
+
+const getSourceLabel = (source: string): string => {
+  switch (source) {
+    case 'local':
+      return 'Local Git'
+    case 'github':
+      return 'GitHub API'
+    case 'fallback':
+      return 'Fallback'
+    default:
+      return 'Unknown'
   }
 }
 
