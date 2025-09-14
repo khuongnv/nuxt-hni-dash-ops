@@ -58,6 +58,7 @@ const breadcrumbs = computed(() => {
     'system': 'Hệ thống',
     'dashboard': 'Dashboard',
     'users': 'Người dùng',
+  'git-log': 'Git Log',
     'reports': 'Báo cáo & Thống kê',
     'settings': 'Cài đặt hệ thống',
     'menu-management': 'Quản lý Menu hệ thống',
