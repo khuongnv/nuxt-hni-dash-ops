@@ -147,7 +147,7 @@ const processSSOCallback = async () => {
     
     // Login user
     console.log('SSO Callback - Logging in user...')
-    const loginSuccess = await loginSSOUser(result.user, result.ssoUser!)
+    const loginSuccess = await loginSSOUser(result.user, result.ssoUser!, result.tokenkey)
     console.log('SSO Callback - Login success:', loginSuccess)
     
     if (!loginSuccess) {

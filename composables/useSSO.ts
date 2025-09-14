@@ -17,6 +17,7 @@ export interface SSOValidationResult {
   user?: any // User từ database
   error?: string
   ssoUser?: SSOUser
+  tokenkey?: string // Tokenkey để gọi API backend
 }
 
 export const useSSO = () => {
@@ -27,7 +28,7 @@ export const useSSO = () => {
     baseUrl: 'https://id.hanoi.vnpt.vn',
     loginUrl: 'https://id.hanoi.vnpt.vn/account/SSOLogOn',
     logoutUrl: 'https://id.hanoi.vnpt.vn/account/logoff',
-    apiUrl: 'https://id.hanoi.vnpt.vn/api/api/ValidateTokenKey'
+    apiUrl: 'https://id.hanoi.vnpt.vn/api/ValidateTokenKey'
   }
   
   // Redirect to SSO login
@@ -68,7 +69,7 @@ export const useSSO = () => {
             ErrorCode: 0,
             ErrorMessage: '',
             Data: {
-              userName: 'admin',
+              userName: 'khuongnv',
               sessionId: 'mock-session-123'
             }
           }
@@ -123,13 +124,14 @@ export const useSSO = () => {
       return {
         success: true,
         user: userResponse.user,
-        ssoUser
+        ssoUser,
+        tokenkey // Thêm tokenkey vào result
       }
     }, 'SSO Validation')
   }
   
   // Login user after SSO validation
-  const loginSSOUser = async (user: any, ssoUser: SSOUser): Promise<boolean> => {
+  const loginSSOUser = async (user: any, ssoUser: SSOUser, tokenkey?: string): Promise<boolean> => {
     return await handleAsyncError(async () => {
       // Tạo session cho user
       const response = await $fetch<{ success: boolean; user?: any }>('/api/auth/login-sso', {
@@ -141,9 +143,15 @@ export const useSSO = () => {
       })
       
       if (response && response.success && response.user) {
+        // Thêm tokenkey vào user object
+        const userWithToken = {
+          ...response.user,
+          ssoTokenKey: tokenkey // Lưu tokenkey để gọi API backend
+        }
+        
         // Lưu user vào localStorage
         if (process.client) {
-          localStorage.setItem('auth_user', JSON.stringify(response.user))
+          localStorage.setItem('auth_user', JSON.stringify(userWithToken))
         }
         return true
       }
@@ -179,12 +187,29 @@ export const useSSO = () => {
     return false
   }
   
+  // Get SSO token for API calls
+  const getSSOToken = (): string | null => {
+    if (process.client) {
+      const user = localStorage.getItem('auth_user')
+      if (user) {
+        try {
+          const userData = JSON.parse(user)
+          return userData.ssoTokenKey || null
+        } catch (error) {
+          return null
+        }
+      }
+    }
+    return null
+  }
+  
   return {
     redirectToSSO,
     validateSSOToken,
     loginSSOUser,
     logoutSSO,
     isSSOSession,
+    getSSOToken,
     SSO_CONFIG
   }
 }

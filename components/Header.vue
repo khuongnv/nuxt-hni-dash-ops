@@ -144,7 +144,7 @@ const {
 } = useAuth()
 
 // SSO
-const { logoutSSO, isSSOSession } = useSSO()
+const { isSSOSession } = useSSO()
 
 // Toggle color mode
 const toggleColorMode = () => {
@@ -166,13 +166,8 @@ const getUserInitials = () => {
 
 // Handle logout
 const handleLogout = () => {
-  // Check if current session is from SSO
-  if (isSSOSession()) {
-    logoutSSO() // This will redirect to SSO logout
-  } else {
-    logout()
-    router.push('/login')
-  }
+  logout()
+  router.push('/login')
 }
 
 // Go to login
