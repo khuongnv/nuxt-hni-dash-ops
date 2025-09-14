@@ -40,6 +40,7 @@
         :toggle-submenu="toggleSubmenu"
         :is-active="isActive"
         :is-submenu-active="isSubmenuActive"
+        :search-query="searchQuery"
       />
     </nav>
 
@@ -122,8 +123,8 @@ const filteredNavigationItems = computed(() => {
   }
   
   // Filter by search query
-  if (debouncedSearchQuery.value.trim()) {
-    const query = debouncedSearchQuery.value.toLowerCase().trim()
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase().trim()
     items = items.map(item => {
       // If main item matches, return it with all children
       if (item.name.toLowerCase().includes(query)) {
@@ -301,7 +302,7 @@ watch(searchQuery, (newQuery) => {
 })
 
 // Auto-open submenus when searching
-watch(debouncedSearchQuery, (newQuery) => {
+watch(searchQuery, (newQuery) => {
   if (newQuery.trim()) {
     // Auto-open all submenus when searching
     const allSubmenuNames = navigationItems.value

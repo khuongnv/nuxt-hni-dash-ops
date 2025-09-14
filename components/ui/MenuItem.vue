@@ -34,7 +34,9 @@
           'flex-shrink-0', 'self-center'
         ]" />
         <Transition name="fade" mode="out-in">
-          <span v-if="!collapsed" class="whitespace-nowrap flex-1 text-left leading-none self-center">{{ item.name }}</span>
+          <span v-if="!collapsed" class="whitespace-nowrap flex-1 text-left leading-none self-center">
+            <HighlightText :text="item.name" :query="searchQuery" />
+          </span>
         </Transition>
         <Transition name="fade" mode="out-in">
           <ChevronDown 
@@ -78,6 +80,7 @@
             :toggle-submenu="toggleSubmenu"
             :is-active="isActive"
             :is-submenu-active="isSubmenuActive"
+            :search-query="searchQuery"
           />
         </div>
       </Transition>
@@ -114,7 +117,9 @@
           'flex-shrink-0', 'self-center'
         ]" />
         <Transition name="fade" mode="out-in">
-          <span v-if="!collapsed" class="whitespace-nowrap flex-1 text-left leading-none self-center">{{ item.name }}</span>
+          <span v-if="!collapsed" class="whitespace-nowrap flex-1 text-left leading-none self-center">
+            <HighlightText :text="item.name" :query="searchQuery" />
+          </span>
         </Transition>
         
         <!-- Tooltip for collapsed state -->
@@ -132,6 +137,7 @@
 <script setup lang="ts">
 import { ChevronDown } from 'lucide-vue-next'
 import Tooltip from './Tooltip.vue'
+import HighlightText from './HighlightText.vue'
 
 interface MenuItem {
   name: string
@@ -148,9 +154,11 @@ interface Props {
   toggleSubmenu: (name: string) => void
   isActive: (href: string) => boolean
   isSubmenuActive: (children: MenuItem[]) => boolean
+  searchQuery?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  level: 0
+  level: 0,
+  searchQuery: ''
 })
 </script>
