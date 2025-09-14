@@ -24,23 +24,28 @@ async function getLocalGitData() {
     cwd: process.cwd()
   })
   
-  // Get git log with more details for each commit
-  const detailedLog = execSync('git log --pretty=format:"%h|%an|%ae|%ad|%s" --date=iso -20', { 
+  // Get git log with more details for each commit (including full message)
+  const detailedLog = execSync('git log --pretty=format:"%h|%an|%ae|%ad|%s|%b" --date=iso -20', { 
     encoding: 'utf8',
     cwd: process.cwd()
   })
   
   // Parse detailed log
   const commits = detailedLog.split('\n').map(line => {
-    const [hash, author, email, date, message] = line.split('|')
-    return {
-      hash: hash?.trim(),
-      author: author?.trim(),
-      email: email?.trim(),
-      date: date?.trim(),
-      message: message?.trim()
+    const parts = line.split('|')
+    if (parts.length >= 5) {
+      const [hash, author, email, date, subject, body] = parts
+      const fullMessage = body ? `${subject}\n\n${body}`.trim() : subject
+      return {
+        hash: hash?.trim(),
+        author: author?.trim(),
+        email: email?.trim(),
+        date: date?.trim(),
+        message: fullMessage
+      }
     }
-  }).filter(commit => commit.hash)
+    return null
+  }).filter(commit => commit && commit.hash)
   
   // Get current branch
   const currentBranch = execSync('git branch --show-current', { 
@@ -108,7 +113,7 @@ async function getGitHubData() {
       author: commit.commit.author.name,
       email: commit.commit.author.email,
       date: commit.commit.author.date,
-      message: commit.commit.message.split('\n')[0] // First line only
+      message: commit.commit.message // Full message including body
     }))
     
     // Transform branches data

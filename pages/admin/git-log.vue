@@ -93,7 +93,7 @@
           <!-- Commits list -->
           <div class="space-y-4">
             <h3 class="text-lg font-semibold">Commits gần đây</h3>
-            <div class="space-y-2">
+            <div class="space-y-3">
               <div 
                 v-for="commit in gitData.commits" 
                 :key="commit.hash"
@@ -108,22 +108,58 @@
                       <span class="text-sm text-muted-foreground">
                         {{ commit.author }}
                       </span>
+                      <span class="text-xs text-muted-foreground">
+                        {{ commit.email }}
+                      </span>
                     </div>
-                    <h4 class="font-medium text-sm mb-1">
-                      {{ getCommitMessagePreview(commit.message, 80) }}
-                    </h4>
-                    <p class="text-xs text-muted-foreground">
-                      {{ formatDate(commit.date) }}
-                    </p>
+                    <div class="mb-2">
+                      <h4 class="font-medium text-sm mb-1">
+                        {{ getCommitSubject(commit.message) }}
+                      </h4>
+                      <div v-if="hasCommitBody(commit.message)" class="text-xs text-muted-foreground">
+                        <div v-if="!expandedCommits.has(commit.hash)" class="line-clamp-2">
+                          {{ getCommitBody(commit.message) }}
+                        </div>
+                        <div v-else class="whitespace-pre-wrap">
+                          {{ getCommitBody(commit.message) }}
+                        </div>
+                        <button 
+                          @click="toggleCommitExpansion(commit.hash)"
+                          class="text-primary hover:underline mt-1"
+                        >
+                          {{ expandedCommits.has(commit.hash) ? 'Thu gọn' : 'Xem thêm' }}
+                        </button>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span class="flex items-center gap-1">
+                        <Calendar class="h-3 w-3" />
+                        {{ formatDate(commit.date) }}
+                      </span>
+                      <span class="flex items-center gap-1">
+                        <Clock class="h-3 w-3" />
+                        {{ getRelativeTime(commit.date) }}
+                      </span>
+                    </div>
                   </div>
-                  <div class="flex-shrink-0">
+                  <div class="flex-shrink-0 flex gap-1">
                     <Button 
                       variant="ghost" 
                       size="sm"
                       @click="copyCommitHash(commit.hash)"
                       class="h-8 w-8 p-0"
+                      title="Copy commit hash"
                     >
                       <Copy class="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      @click="copyCommitMessage(commit.message)"
+                      class="h-8 w-8 p-0"
+                      title="Copy commit message"
+                    >
+                      <MessageSquare class="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -146,7 +182,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { GitBranch, AlertTriangle, Copy } from 'lucide-vue-next'
+import { GitBranch, AlertTriangle, Copy, MessageSquare, Calendar, Clock } from 'lucide-vue-next'
 import Button from '~/components/ui/Button.vue'
 import Card from '~/components/ui/Card.vue'
 import CardHeader from '~/components/ui/CardHeader.vue'
@@ -169,6 +205,7 @@ const { getGitLog, formatDate, getCommitHashShort, getCommitMessagePreview } = u
 const loading = ref(true)
 const error = ref<string | null>(null)
 const gitData = ref<GitLogData | null>(null)
+const expandedCommits = ref(new Set<string>())
 
 // Methods
 const loadGitLog = async () => {
@@ -193,6 +230,44 @@ const copyCommitHash = async (hash: string) => {
   }
 }
 
+const copyCommitMessage = async (message: string) => {
+  try {
+    await navigator.clipboard.writeText(message)
+    // You could add a toast notification here
+  } catch (err) {
+    console.error('Failed to copy commit message:', err)
+  }
+}
+
+const getRelativeTime = (dateString: string): string => {
+  try {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+    
+    if (diffInSeconds < 60) {
+      return 'Vừa xong'
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60)
+      return `${minutes} phút trước`
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600)
+      return `${hours} giờ trước`
+    } else if (diffInSeconds < 2592000) {
+      const days = Math.floor(diffInSeconds / 86400)
+      return `${days} ngày trước`
+    } else if (diffInSeconds < 31536000) {
+      const months = Math.floor(diffInSeconds / 2592000)
+      return `${months} tháng trước`
+    } else {
+      const years = Math.floor(diffInSeconds / 31536000)
+      return `${years} năm trước`
+    }
+  } catch (error) {
+    return 'Không xác định'
+  }
+}
+
 const getSourceLabel = (source: string): string => {
   switch (source) {
     case 'local':
@@ -206,8 +281,42 @@ const getSourceLabel = (source: string): string => {
   }
 }
 
+const getCommitSubject = (message: string): string => {
+  return message.split('\n')[0]
+}
+
+const getCommitBody = (message: string): string => {
+  const lines = message.split('\n')
+  if (lines.length <= 1) return ''
+  
+  // Skip the first line (subject) and any empty lines after it
+  const bodyLines = lines.slice(1).filter(line => line.trim() !== '')
+  return bodyLines.join('\n')
+}
+
+const hasCommitBody = (message: string): boolean => {
+  return getCommitBody(message).length > 0
+}
+
+const toggleCommitExpansion = (hash: string) => {
+  if (expandedCommits.value.has(hash)) {
+    expandedCommits.value.delete(hash)
+  } else {
+    expandedCommits.value.add(hash)
+  }
+}
+
 // Lifecycle
 onMounted(() => {
   loadGitLog()
 })
 </script>
+
+<style scoped>
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>
