@@ -29,8 +29,26 @@ const highlightedText = computed(() => {
     return props.text
   }
   
-  // Find the original match position and highlight it
-  const regex = new RegExp(`(${props.query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
+  // Create a more flexible regex that handles both with and without diacritics
+  const escapedQuery = props.query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  
+  // Create regex that matches both original query and its diacritics version
+  const diacriticsMap: { [key: string]: string } = {
+    'a': '[aàáạảãâầấậẩẫăằắặẳẵ]',
+    'e': '[eèéẹẻẽêềếệểễ]',
+    'i': '[iìíịỉĩ]',
+    'o': '[oòóọỏõôồốộổỗơờớợởỡ]',
+    'u': '[uùúụủũưừứựửữ]',
+    'y': '[yỳýỵỷỹ]',
+    'd': '[dđ]'
+  }
+  
+  let flexibleRegex = escapedQuery
+  for (const [base, pattern] of Object.entries(diacriticsMap)) {
+    flexibleRegex = flexibleRegex.replace(new RegExp(base, 'gi'), pattern)
+  }
+  
+  const regex = new RegExp(`(${flexibleRegex})`, 'gi')
   return props.text.replace(regex, '<mark class="bg-yellow-200 text-yellow-900 px-1 rounded">$1</mark>')
 })
 </script>

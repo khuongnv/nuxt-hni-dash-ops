@@ -131,11 +131,15 @@ const filteredNavigationItems = computed(() => {
       return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     }
     
-    // Function to check if text matches query (case-insensitive, no diacritics)
+    // Function to check if text matches query (case-insensitive, flexible diacritics)
     const matchesQuery = (text: string, searchQuery: string) => {
       const normalizedText = removeDiacritics(text).toLowerCase()
       const normalizedQuery = removeDiacritics(searchQuery).toLowerCase()
-      return normalizedText.includes(normalizedQuery)
+      
+      // Check both directions: query without diacritics vs text, and query vs text without diacritics
+      return normalizedText.includes(normalizedQuery) || 
+             removeDiacritics(text).toLowerCase().includes(searchQuery.toLowerCase()) ||
+             text.toLowerCase().includes(normalizedQuery)
     }
     
     items = items.map(item => {
