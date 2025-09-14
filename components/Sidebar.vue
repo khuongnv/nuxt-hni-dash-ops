@@ -128,13 +128,33 @@ const filteredNavigationItems = computed(() => {
     
     // Function to remove Vietnamese diacritics
     const removeDiacritics = (str: string) => {
-      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      const result = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      
+      // Debug for "Đơn vị"
+      if (str === 'Đơn vị') {
+        console.log('Debug removeDiacritics for "Đơn vị":')
+        console.log('  Input:', str)
+        console.log('  NFD normalized:', str.normalize('NFD'))
+        console.log('  After removing diacritics:', result)
+      }
+      
+      return result
     }
     
     // Function to check if text matches query (case-insensitive, flexible diacritics)
     const matchesQuery = (text: string, searchQuery: string) => {
       const normalizedText = removeDiacritics(text).toLowerCase()
       const normalizedQuery = removeDiacritics(searchQuery).toLowerCase()
+      
+      // Debug for "don" specifically
+      if (searchQuery.toLowerCase() === 'don') {
+        console.log('Debug "don" search:')
+        console.log('  Original text:', text)
+        console.log('  Normalized text:', normalizedText)
+        console.log('  Original query:', searchQuery)
+        console.log('  Normalized query:', normalizedQuery)
+        console.log('  Match result:', normalizedText.includes(normalizedQuery))
+      }
       
       // Simple check: if normalized text contains normalized query
       return normalizedText.includes(normalizedQuery)
