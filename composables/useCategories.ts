@@ -1,4 +1,5 @@
 import { useErrorHandler } from './useErrorHandler'
+import { demoCategories, Category } from '~/data/demo-categories'
 
 export interface Category {
   id: number
@@ -16,43 +17,65 @@ export const useCategories = () => {
 
   const getCategories = async (): Promise<Category[]> => {
     return await handleAsyncError(async () => {
-      const { data } = await $fetch('/api/categories')
-      return data
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 200))
+      return demoCategories
     }, 'Lấy danh sách categories')
   }
 
   const getCategoryById = async (id: number): Promise<Category> => {
     return await handleAsyncError(async () => {
-      const { data } = await $fetch(`/api/categories/${id}`)
-      return data
+      await new Promise(resolve => setTimeout(resolve, 100))
+      const category = demoCategories.find(cat => cat.id === id)
+      if (!category) {
+        throw new Error('Category not found')
+      }
+      return category
     }, 'Lấy thông tin category')
   }
 
   const createCategory = async (categoryData: Partial<Category>): Promise<Category> => {
     return await handleAsyncError(async () => {
-      const { data } = await $fetch('/api/categories', {
-        method: 'POST',
-        body: categoryData
-      })
-      return data
+      await new Promise(resolve => setTimeout(resolve, 300))
+      const newCategory: Category = {
+        id: Math.max(...demoCategories.map(c => c.id)) + 1,
+        code: categoryData.code || '',
+        name: categoryData.name || '',
+        parent_id: categoryData.parent_id || null,
+        map_id: categoryData.map_id || null,
+        note: categoryData.note || null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+      demoCategories.push(newCategory)
+      return newCategory
     }, 'Tạo category')
   }
 
   const updateCategory = async (id: number, categoryData: Partial<Category>): Promise<Category> => {
     return await handleAsyncError(async () => {
-      const { data } = await $fetch(`/api/categories/${id}`, {
-        method: 'PUT',
-        body: categoryData
-      })
-      return data
+      await new Promise(resolve => setTimeout(resolve, 300))
+      const index = demoCategories.findIndex(cat => cat.id === id)
+      if (index === -1) {
+        throw new Error('Category not found')
+      }
+      demoCategories[index] = {
+        ...demoCategories[index],
+        ...categoryData,
+        updated_at: new Date().toISOString()
+      }
+      return demoCategories[index]
     }, 'Cập nhật category')
   }
 
   const deleteCategory = async (id: number): Promise<void> => {
     return await handleAsyncError(async () => {
-      await $fetch(`/api/categories/${id}`, {
-        method: 'DELETE'
-      })
+      await new Promise(resolve => setTimeout(resolve, 200))
+      const index = demoCategories.findIndex(cat => cat.id === id)
+      if (index === -1) {
+        throw new Error('Category not found')
+      }
+      demoCategories.splice(index, 1)
     }, 'Xóa category')
   }
 

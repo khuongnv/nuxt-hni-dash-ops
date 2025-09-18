@@ -1,4 +1,5 @@
 import { useErrorHandler } from './useErrorHandler'
+import { demoDepartments, Department } from '~/data/demo-departments'
 
 export interface Department {
   id: number
@@ -17,43 +18,66 @@ export const useDepartments = () => {
 
   const getDepartments = async (): Promise<Department[]> => {
     return await handleAsyncError(async () => {
-      const { data } = await $fetch('/api/departments')
-      return data
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 200))
+      return demoDepartments
     }, 'Lấy danh sách departments')
   }
 
   const getDepartmentById = async (id: number): Promise<Department> => {
     return await handleAsyncError(async () => {
-      const { data } = await $fetch(`/api/departments/${id}`)
-      return data
+      await new Promise(resolve => setTimeout(resolve, 100))
+      const department = demoDepartments.find(dept => dept.id === id)
+      if (!department) {
+        throw new Error('Department not found')
+      }
+      return department
     }, 'Lấy thông tin department')
   }
 
   const createDepartment = async (departmentData: Partial<Department>): Promise<Department> => {
     return await handleAsyncError(async () => {
-      const { data } = await $fetch('/api/departments', {
-        method: 'POST',
-        body: departmentData
-      })
-      return data
+      await new Promise(resolve => setTimeout(resolve, 300))
+      const newDepartment: Department = {
+        id: Math.max(...demoDepartments.map(d => d.id)) + 1,
+        code: departmentData.code || '',
+        name: departmentData.name || '',
+        parent_id: departmentData.parent_id || null,
+        map_id: departmentData.map_id || null,
+        level: departmentData.level || 1,
+        note: departmentData.note || null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+      demoDepartments.push(newDepartment)
+      return newDepartment
     }, 'Tạo department')
   }
 
   const updateDepartment = async (id: number, departmentData: Partial<Department>): Promise<Department> => {
     return await handleAsyncError(async () => {
-      const { data } = await $fetch(`/api/departments/${id}`, {
-        method: 'PUT',
-        body: departmentData
-      })
-      return data
+      await new Promise(resolve => setTimeout(resolve, 300))
+      const index = demoDepartments.findIndex(dept => dept.id === id)
+      if (index === -1) {
+        throw new Error('Department not found')
+      }
+      demoDepartments[index] = {
+        ...demoDepartments[index],
+        ...departmentData,
+        updated_at: new Date().toISOString()
+      }
+      return demoDepartments[index]
     }, 'Cập nhật department')
   }
 
   const deleteDepartment = async (id: number): Promise<void> => {
     return await handleAsyncError(async () => {
-      await $fetch(`/api/departments/${id}`, {
-        method: 'DELETE'
-      })
+      await new Promise(resolve => setTimeout(resolve, 200))
+      const index = demoDepartments.findIndex(dept => dept.id === id)
+      if (index === -1) {
+        throw new Error('Department not found')
+      }
+      demoDepartments.splice(index, 1)
     }, 'Xóa department')
   }
 

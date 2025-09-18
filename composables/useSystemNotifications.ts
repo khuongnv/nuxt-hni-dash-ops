@@ -1,3 +1,6 @@
+import { useErrorHandler } from './useErrorHandler'
+import { demoSystemNotifications, SystemNotification } from '../data/demo-system-notifications'
+
 export const useSystemNotifications = () => {
   const { handleAsyncError } = useErrorHandler()
 
@@ -5,11 +8,9 @@ export const useSystemNotifications = () => {
   const getNotifications = async () => {
     return await handleAsyncError(
       async () => {
-        const response = await $fetch('/api/system-notifications')
-        if (response.success) {
-          return response.data || []
-        }
-        return []
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 200))
+        return demoSystemNotifications
       },
       'getNotifications'
     )
@@ -19,11 +20,12 @@ export const useSystemNotifications = () => {
   const getNotificationById = async (id: number) => {
     return await handleAsyncError(
       async () => {
-        const response = await $fetch(`/api/system-notifications/${id}`)
-        if (response.success) {
-          return response.data
+        await new Promise(resolve => setTimeout(resolve, 100))
+        const notification = demoSystemNotifications.find(notif => notif.id === id)
+        if (!notification) {
+          throw new Error('Notification not found')
         }
-        return null
+        return notification
       },
       'getNotificationById'
     )
@@ -33,14 +35,21 @@ export const useSystemNotifications = () => {
   const createNotification = async (notificationData: any) => {
     return await handleAsyncError(
       async () => {
-        const response = await $fetch('/api/system-notifications', {
-          method: 'POST',
-          body: notificationData
-        })
-        if (response.success) {
-          return response.data
+        await new Promise(resolve => setTimeout(resolve, 300))
+        const newNotification: SystemNotification = {
+          id: Math.max(...demoSystemNotifications.map(n => n.id)) + 1,
+          title: notificationData.title || '',
+          content: notificationData.content || '',
+          type: notificationData.type || 'general',
+          priority: notificationData.priority || 'medium',
+          is_read: false,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          expires_at: notificationData.expires_at || null,
+          user_id: notificationData.user_id || null
         }
-        return null
+        demoSystemNotifications.push(newNotification)
+        return newNotification
       },
       'createNotification'
     )
@@ -50,14 +59,17 @@ export const useSystemNotifications = () => {
   const updateNotification = async (id: number, notificationData: any) => {
     return await handleAsyncError(
       async () => {
-        const response = await $fetch(`/api/system-notifications/${id}`, {
-          method: 'PUT',
-          body: notificationData
-        })
-        if (response.success) {
-          return response.data
+        await new Promise(resolve => setTimeout(resolve, 300))
+        const index = demoSystemNotifications.findIndex(notif => notif.id === id)
+        if (index === -1) {
+          throw new Error('Notification not found')
         }
-        return null
+        demoSystemNotifications[index] = {
+          ...demoSystemNotifications[index],
+          ...notificationData,
+          updated_at: new Date().toISOString()
+        }
+        return demoSystemNotifications[index]
       },
       'updateNotification'
     )
@@ -67,10 +79,13 @@ export const useSystemNotifications = () => {
   const deleteNotification = async (id: number) => {
     return await handleAsyncError(
       async () => {
-        const response = await $fetch(`/api/system-notifications/${id}`, {
-          method: 'DELETE'
-        })
-        return response.success
+        await new Promise(resolve => setTimeout(resolve, 200))
+        const index = demoSystemNotifications.findIndex(notif => notif.id === id)
+        if (index === -1) {
+          throw new Error('Notification not found')
+        }
+        demoSystemNotifications.splice(index, 1)
+        return true
       },
       'deleteNotification'
     )
@@ -80,11 +95,14 @@ export const useSystemNotifications = () => {
   const markAsRead = async (id: number) => {
     return await handleAsyncError(
       async () => {
-        const response = await $fetch(`/api/system-notifications/${id}`, {
-          method: 'PUT',
-          body: { is_read: true }
-        })
-        return response.success
+        await new Promise(resolve => setTimeout(resolve, 200))
+        const index = demoSystemNotifications.findIndex(notif => notif.id === id)
+        if (index === -1) {
+          throw new Error('Notification not found')
+        }
+        demoSystemNotifications[index].is_read = true
+        demoSystemNotifications[index].updated_at = new Date().toISOString()
+        return true
       },
       'markAsRead'
     )
@@ -95,7 +113,7 @@ export const useSystemNotifications = () => {
     return await handleAsyncError(
       async () => {
         const notifications = await getNotifications()
-        return notifications.filter((notification: any) => !notification.is_read)
+        return notifications?.filter((notification: SystemNotification) => !notification.is_read) || []
       },
       'getUnreadNotifications'
     )
@@ -106,7 +124,7 @@ export const useSystemNotifications = () => {
     return await handleAsyncError(
       async () => {
         const notifications = await getNotifications()
-        return notifications.filter((notification: any) => notification.type === type)
+        return notifications?.filter((notification: SystemNotification) => notification.type === type) || []
       },
       'getNotificationsByType'
     )
@@ -117,7 +135,7 @@ export const useSystemNotifications = () => {
     return await handleAsyncError(
       async () => {
         const notifications = await getNotifications()
-        return notifications.filter((notification: any) => notification.priority === priority)
+        return notifications?.filter((notification: SystemNotification) => notification.priority === priority) || []
       },
       'getNotificationsByPriority'
     )

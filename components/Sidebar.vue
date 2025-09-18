@@ -82,6 +82,7 @@ import { useRoute } from 'vue-router'
 import { Menu, Search, X } from 'lucide-vue-next'
 import MenuItem from '~/components/ui/MenuItem.vue'
 import { useAuth } from '~/composables/useAuth'
+import { useMenus } from '~/composables/useMenus'
 
 // Props
 const props = defineProps<{
@@ -96,6 +97,9 @@ const { isAuthenticated, isInitialized } = useAuth()
 
 // Use icons composable
 const { iconMap, getIconComponent } = useIcons()
+
+// Use menus composable
+const { getMenus, buildMenuTree } = useMenus()
 
 // App version and build info
 const appVersion = ref('')
@@ -115,15 +119,8 @@ const filteredNavigationItems = computed(() => {
   
   let items = navigationItems.value
   
-  // Filter by authentication
-  if (!isAuthenticated.value) {
-    items = items.filter(item => {
-      return item.href === '/main/dashboard' || 
-             item.href === '/main/about' ||
-             item.name === 'Dashboard' ||
-             item.name === 'About'
-    })
-  }
+  // Hiển thị tất cả menu khi chưa login (theo yêu cầu)
+  // Không filter theo authentication nữa
   
   // Filter by search query
   if (searchQuery.value.trim()) {
@@ -196,37 +193,32 @@ const filteredNavigationItems = computed(() => {
   return items
 })
 
-// Load menus from API
+// Load menus from fake data
 const loadMenus = async () => {
   try {
-    const response = await $fetch('/api/menus')
+    const menus = await getMenus()
     
-    if (response.success && response.data) {
-      // Transform API data to navigation format
-      const menus = response.data.filter((menu: any) => menu.is_active)
+    // Transform menu data to navigation format
+    const activeMenus = menus.filter((menu: any) => menu.is_active)
+    
+    // Build navigation tree
+    const buildNavigationTree = (menus: any[], parentId: number | null = null): any[] => {
+      const filtered = menus
+        .filter(menu => menu.parent_id === parentId)
+        .sort((a, b) => a.order - b.order)
       
-      // Build navigation tree
-      // Hiển thị tất cả menu (kể cả path sai) vì đã có xử lý 404.vue
-      const buildNavigationTree = (menus: any[], parentId: number | null = null): any[] => {
-        const filtered = menus
-          .filter(menu => menu.parent_id === parentId)
-          .filter(menu => !menu.href || menu.href === '#' || menu.href.startsWith('/')) // Include parent menus or any valid path
-          .sort((a, b) => a.order - b.order)
-        
-        
-        return filtered.map(menu => ({
-          name: menu.name,
-          href: menu.href === '#' ? '#' : (menu.href || '#'), // Use '#' for parent menus or empty href
-          icon: getIconComponent(menu.icon),
-          children: buildNavigationTree(menus, menu.id)
-        }))
-      }
-      
-      navigationItems.value = buildNavigationTree(menus)
+      return filtered.map(menu => ({
+        name: menu.name,
+        href: menu.path,
+        icon: getIconComponent(menu.icon),
+        children: buildNavigationTree(menus, menu.id)
+      }))
     }
+    
+    navigationItems.value = buildNavigationTree(activeMenus)
   } catch (error) {
     console.error('Error loading menus:', error)
-    // Fallback to static data if API fails
+    // Fallback to static data if fake data fails
     navigationItems.value = [
       {
         name: 'Dashboard',
