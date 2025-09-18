@@ -1,5 +1,3 @@
-import { createClient } from '@supabase/supabase-js'
-
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
@@ -13,48 +11,30 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_API_KEY!
-    )
-
-    // Find user by username and password
-    const { data, error } = await supabase
-      .from('users')
-      .select(`
-        id,
-        full_name,
-        username,
-        email,
-        department_id,
-        role_id,
-        position_id,
-        gender_id,
-        dob,
-        status,
-        created_at,
-        updated_at,
-        department:departments(name),
-        role:categories!role_id(name),
-        position:categories!position_id(name),
-        gender:categories!gender_id(name)
-      `)
-      .eq('username', username)
-      .eq('password', password)
-      .eq('status', 'active')
-      .single()
-
-    if (error || !data) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Tên đăng nhập hoặc mật khẩu không đúng'
-      })
+    // Mock user data - không cần kiểm tra thực tế
+    const mockUser = {
+      id: 1,
+      full_name: 'Nguyễn Văn Khương',
+      username: username,
+      email: 'khuongnv@live.com',
+      department_id: 1,
+      role_id: 1,
+      position_id: 1,
+      gender_id: 1,
+      dob: '1990-01-01',
+      status: 'active',
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+      department: { name: 'IT Department' },
+      role: { name: 'Admin' },
+      position: { name: 'Developer' },
+      gender: { name: 'Nam' }
     }
 
-    // Return user data without password
+    // Luôn trả về thành công với dữ liệu ảo
     return {
       success: true,
-      user: data,
+      user: mockUser,
       message: 'Đăng nhập thành công'
     }
   } catch (error: any) {

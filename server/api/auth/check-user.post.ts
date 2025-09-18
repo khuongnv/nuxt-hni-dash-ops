@@ -1,5 +1,3 @@
-import { createClient } from '@supabase/supabase-js'
-
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
@@ -12,65 +10,29 @@ export default defineEventHandler(async (event) => {
       })
     }
     
-    // Initialize Supabase client
-    const supabaseUrl = process.env.SUPABASE_URL
-    const supabaseKey = process.env.SUPABASE_API_KEY
-    
-    if (!supabaseUrl || !supabaseKey) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: 'Supabase configuration missing'
-      })
-    }
-    
-    const supabase = createClient(supabaseUrl, supabaseKey)
-    
-    // Check if user exists in database
-    const { data: user, error } = await supabase
-      .from('users')
-      .select(`
-        id,
-        username,
-        full_name,
-        email,
-        status,
-        department_id,
-        role_id,
-        position_id,
-        gender_id,
-        dob,
-        created_at,
-        updated_at,
-        department:departments(name),
-        role:categories!role_id(name),
-        position:categories!position_id(name),
-        gender:categories!gender_id(name)
-      `)
-      .eq('username', username)
-      .eq('status', 'active')
-      .single()
-    
-    if (error) {
-      if (error.code === 'PGRST116') {
-        // User not found
-        return {
-          success: false,
-          error: 'User not found in database'
-        }
-      }
-      throw error
-    }
-    
-    if (!user) {
-      return {
-        success: false,
-        error: 'User not found in database'
-      }
+    // Mock user data - luôn trả về user tồn tại
+    const mockUser = {
+      id: 1,
+      username: username,
+      full_name: 'Nguyễn Văn Khương',
+      email: 'khuongnv@live.com',
+      status: 'active',
+      department_id: 1,
+      role_id: 1,
+      position_id: 1,
+      gender_id: 1,
+      dob: '1990-01-01',
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+      department: { name: 'IT Department' },
+      role: { name: 'Admin' },
+      position: { name: 'Developer' },
+      gender: { name: 'Nam' }
     }
     
     return {
       success: true,
-      user
+      user: mockUser
     }
     
   } catch (error: any) {

@@ -12,12 +12,12 @@ export interface Menu {
 }
 
 export const demoMenus: Menu[] = [
-  // Menu chính
+  // Cấp 1 - Menu chính (chỉ giữ lại các menu có file Vue)
   {
     id: 1,
-    name: 'Trang chủ',
-    path: '/',
-    icon: 'home',
+    name: 'Dashboard',
+    path: '/main/dashboard',
+    icon: 'LayoutDashboard',
     parent_id: null,
     order: 1,
     is_active: true,
@@ -27,9 +27,9 @@ export const demoMenus: Menu[] = [
   },
   {
     id: 2,
-    name: 'Dashboard',
-    path: '/main/dashboard',
-    icon: 'dashboard',
+    name: 'Giới thiệu',
+    path: '/main/about',
+    icon: 'Info',
     parent_id: null,
     order: 2,
     is_active: true,
@@ -39,9 +39,9 @@ export const demoMenus: Menu[] = [
   },
   {
     id: 3,
-    name: 'Báo cáo',
-    path: '/system/reports',
-    icon: 'chart-bar',
+    name: 'Quản lý',
+    path: '#',
+    icon: 'Users',
     parent_id: null,
     order: 3,
     is_active: true,
@@ -51,9 +51,9 @@ export const demoMenus: Menu[] = [
   },
   {
     id: 4,
-    name: 'Cài đặt',
-    path: '/system/settings',
-    icon: 'cog',
+    name: 'Báo cáo',
+    path: '#',
+    icon: 'BarChart3',
     parent_id: null,
     order: 4,
     is_active: true,
@@ -63,9 +63,9 @@ export const demoMenus: Menu[] = [
   },
   {
     id: 5,
-    name: 'Quản trị',
-    path: '/admin',
-    icon: 'shield-check',
+    name: 'Hệ thống',
+    path: '#',
+    icon: 'Settings',
     parent_id: null,
     order: 5,
     is_active: true,
@@ -73,27 +73,27 @@ export const demoMenus: Menu[] = [
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z'
   },
+
+  // Cấp 2 - Menu con của Quản lý
   {
     id: 6,
-    name: 'Giới thiệu',
-    path: '/main/about',
-    icon: 'information-circle',
-    parent_id: null,
-    order: 6,
+    name: 'Người dùng',
+    path: '/admin/users',
+    icon: 'User',
+    parent_id: 3,
+    order: 1,
     is_active: true,
     is_public: true,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z'
   },
-
-  // Sub-menu Báo cáo
   {
     id: 7,
-    name: 'Báo cáo doanh thu',
-    path: '/system/reports/revenue',
-    icon: 'currency-dollar',
+    name: 'Menu',
+    path: '/admin/menus',
+    icon: 'Menu',
     parent_id: 3,
-    order: 1,
+    order: 2,
     is_active: true,
     is_public: true,
     created_at: '2024-01-01T00:00:00Z',
@@ -101,100 +101,10 @@ export const demoMenus: Menu[] = [
   },
   {
     id: 8,
-    name: 'Báo cáo người dùng',
-    path: '/system/reports/users',
-    icon: 'users',
+    name: 'Thông báo',
+    path: '/admin/system-notifications',
+    icon: 'Bell',
     parent_id: 3,
-    order: 2,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-
-  // Sub-menu Cài đặt
-  {
-    id: 9,
-    name: 'Cài đặt chung',
-    path: '/system/settings/general',
-    icon: 'cog-6-tooth',
-    parent_id: 4,
-    order: 1,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 10,
-    name: 'Bảo mật',
-    path: '/system/settings/security',
-    icon: 'shield-exclamation',
-    parent_id: 4,
-    order: 2,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-
-  // Sub-menu Bảo mật
-  {
-    id: 11,
-    name: 'Mật khẩu',
-    path: '/system/settings/security/password',
-    icon: 'key',
-    parent_id: 10,
-    order: 1,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 12,
-    name: 'Xác thực 2FA',
-    path: '/system/settings/security/2fa',
-    icon: 'device-phone-mobile',
-    parent_id: 10,
-    order: 2,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-
-  // Sub-menu Quản trị
-  {
-    id: 13,
-    name: 'Quản lý người dùng',
-    path: '/admin/users',
-    icon: 'user-group',
-    parent_id: 5,
-    order: 1,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 14,
-    name: 'Quản lý phòng ban',
-    path: '/admin/departments',
-    icon: 'building-office',
-    parent_id: 5,
-    order: 2,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 15,
-    name: 'Quản lý danh mục',
-    path: '/admin/categories',
-    icon: 'tag',
-    parent_id: 5,
     order: 3,
     is_active: true,
     is_public: true,
@@ -202,11 +112,11 @@ export const demoMenus: Menu[] = [
     updated_at: '2024-01-01T00:00:00Z'
   },
   {
-    id: 16,
-    name: 'Quản lý menu',
-    path: '/admin/menus',
-    icon: 'bars-3',
-    parent_id: 5,
+    id: 9,
+    name: 'Phòng ban',
+    path: '/admin/departments',
+    icon: 'Building',
+    parent_id: 3,
     order: 4,
     is_active: true,
     is_public: true,
@@ -214,11 +124,11 @@ export const demoMenus: Menu[] = [
     updated_at: '2024-01-01T00:00:00Z'
   },
   {
-    id: 17,
-    name: 'Thông báo hệ thống',
-    path: '/admin/system-notifications',
-    icon: 'bell',
-    parent_id: 5,
+    id: 10,
+    name: 'Danh mục',
+    path: '/admin/categories',
+    icon: 'Tag',
+    parent_id: 3,
     order: 5,
     is_active: true,
     is_public: true,
@@ -226,11 +136,11 @@ export const demoMenus: Menu[] = [
     updated_at: '2024-01-01T00:00:00Z'
   },
   {
-    id: 18,
+    id: 11,
     name: 'Git Log',
     path: '/admin/git-log',
-    icon: 'code-bracket',
-    parent_id: 5,
+    icon: 'CodeBracket',
+    parent_id: 3,
     order: 6,
     is_active: true,
     is_public: true,
@@ -238,146 +148,106 @@ export const demoMenus: Menu[] = [
     updated_at: '2024-01-01T00:00:00Z'
   },
 
-  // Menu bổ sung
+  // Cấp 2 - Menu con của Báo cáo
+  {
+    id: 12,
+    name: 'Báo cáo tổng quan',
+    path: '/system/reports',
+    icon: 'FileText',
+    parent_id: 4,
+    order: 1,
+    is_active: true,
+    is_public: true,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z'
+  },
+
+  // Cấp 2 - Menu con của Hệ thống
+  {
+    id: 13,
+    name: 'Cài đặt',
+    path: '/system/settings',
+    icon: 'Settings',
+    parent_id: 5,
+    order: 1,
+    is_active: true,
+    is_public: true,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z'
+  },
+
+  // Cấp 3 - Menu con của Báo cáo tổng quan
+  {
+    id: 14,
+    name: 'Báo cáo doanh thu',
+    path: '/system/reports/revenue',
+    icon: 'DollarSign',
+    parent_id: 12,
+    order: 1,
+    is_active: true,
+    is_public: true,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 15,
+    name: 'Báo cáo người dùng',
+    path: '/system/reports/users',
+    icon: 'Users',
+    parent_id: 12,
+    order: 2,
+    is_active: true,
+    is_public: true,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z'
+  },
+
+  // Cấp 3 - Menu con của Cài đặt
+  {
+    id: 16,
+    name: 'Cài đặt chung',
+    path: '/system/settings/general',
+    icon: 'Settings',
+    parent_id: 13,
+    order: 1,
+    is_active: true,
+    is_public: true,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 17,
+    name: 'Bảo mật',
+    path: '/system/settings/security',
+    icon: 'Shield',
+    parent_id: 13,
+    order: 2,
+    is_active: true,
+    is_public: true,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z'
+  },
+
+  // Cấp 4 - Menu con của Bảo mật
+  {
+    id: 18,
+    name: 'Xác thực 2FA',
+    path: '/system/settings/security/2fa',
+    icon: 'Shield',
+    parent_id: 17,
+    order: 1,
+    is_active: true,
+    is_public: true,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z'
+  },
   {
     id: 19,
-    name: 'Hỗ trợ',
-    path: '/support',
-    icon: 'lifebuoy',
-    parent_id: null,
-    order: 7,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 20,
-    name: 'Liên hệ',
-    path: '/contact',
-    icon: 'envelope',
-    parent_id: null,
-    order: 8,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 21,
-    name: 'Tài liệu',
-    path: '/docs',
-    icon: 'document-text',
-    parent_id: null,
-    order: 9,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 22,
-    name: 'API',
-    path: '/api-docs',
-    icon: 'code-bracket',
-    parent_id: null,
-    order: 10,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 23,
-    name: 'Thống kê',
-    path: '/analytics',
-    icon: 'chart-pie',
-    parent_id: null,
-    order: 11,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 24,
-    name: 'Lịch sử',
-    path: '/history',
-    icon: 'clock',
-    parent_id: null,
-    order: 12,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 25,
-    name: 'Backup',
-    path: '/backup',
-    icon: 'archive-box',
-    parent_id: null,
-    order: 13,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 26,
-    name: 'Logs',
-    path: '/logs',
-    icon: 'document-duplicate',
-    parent_id: null,
-    order: 14,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 27,
-    name: 'Monitoring',
-    path: '/monitoring',
-    icon: 'eye',
-    parent_id: null,
-    order: 15,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 28,
-    name: 'Performance',
-    path: '/performance',
-    icon: 'bolt',
-    parent_id: null,
-    order: 16,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 29,
-    name: 'Security',
-    path: '/security',
-    icon: 'shield-check',
-    parent_id: null,
-    order: 17,
-    is_active: true,
-    is_public: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 30,
-    name: 'Help Center',
-    path: '/help',
-    icon: 'question-mark-circle',
-    parent_id: null,
-    order: 18,
+    name: 'Mật khẩu',
+    path: '/system/settings/security/password',
+    icon: 'Key',
+    parent_id: 17,
+    order: 2,
     is_active: true,
     is_public: true,
     created_at: '2024-01-01T00:00:00Z',
